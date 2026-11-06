@@ -1,6 +1,6 @@
 # Requirements
 
-Living specification for the one-page profile at `mileswaite-profile`. The reference site at `mileswaite.net` is read-only.
+Living specification for the profile at `mileswaite-profile`. The public origin is `https://ai.mileswaite.net`. The reference site at `mileswaite.net` is read-only.
 
 ## Highest-risk assumption
 
@@ -47,7 +47,7 @@ Acceptance: the only continuous animation is the cylinder. Accent `#c41212` is t
 
 “Miles Waite”, plus anchors to Work and Contact only.
 
-Acceptance: those two anchors scroll to `#work` and `#contact`. No other navigation.
+Acceptance: on the homepage those two anchors scroll to `#work` and `#contact`. On `/work/decision-intelligence/` they go to `/#work` and `/#contact`. No other navigation. The case-study page does not invent local `#work` or `#contact` targets.
 
 ### R7. Compact hero copy
 
@@ -78,12 +78,12 @@ Editorial list with rules, not a card grid.
 
 | Piece | Body | Link |
 | --- | --- | --- |
-| Flagship: Autonomous Enterprise Decision Intelligence Platform | A multi-agent platform for investigating complex enterprise decisions. Specialist agents analyse independent business domains, critically review findings, and synthesise evidence into a structured recommendation for human decision-makers. | None |
+| Flagship: Autonomous Enterprise Decision Intelligence Platform | A multi-agent platform for investigating complex enterprise decisions. Specialist agents analyse independent business domains, critically review findings, and synthesise evidence into a structured recommendation for human decision-makers. | One text link only: “Read the architecture and design case study” → `/work/decision-intelligence/`. No repository, demo, or results link. |
 | Self-Learning AP Automation | Non-PO invoices arrive without a purchase order to anchor their coding. The system retrieves similar historically coded lines, then uses specialist agents to assess the entity, VAT treatment, and cost centre. A separate reasoning step reviews agent disagreements before routing each line to automatic posting or human review. Agent flags can escalate a decision, but never override a human. Then: Evaluation context: The system was evaluated on 11,118 real invoice lines from the LA Checkbook dataset. It achieved a 71.5% automation rate at 99.47% accuracy. Automation refers to work routed to automatic posting rather than manual review; the objective is dependable automation with explicit controls, not maximum automation at any cost. | https://github.com/WaiteM124/ap-automation |
 | Governed ERP Automation | The platform lets employees query and operate a live ERP through natural-language Slack conversations. It supports AP/AR workflows including invoices, receipts, payments, journals, and credit notes. It can also chain multiple tool calls to investigate questions such as why invoices remain outstanding or calculate a customer’s net financial position. Then: Architecture context: The 90+ tools are discrete ERP operations exposed to the agent — not 90+ autonomous agents. Consequential writes pass through middleware enforcing approval queues, idempotency, and audit logging. Humans approve controlled actions before execution, while distributed tracing connects each conversation, tool execution, and downstream API call for diagnosis and accountability. | https://github.com/WaiteM124/governed-agent-toolkit |
 | Enterprise RAG Assistant | The assistant gives consultants natural-language access to organisational knowledge without manually searching across documents. It combines keyword and semantic retrieval to find relevant material, then generates grounded answers. Separate tenant-specific collections keep each organisation’s data isolated. Then: Evaluation context: The assistant serves 200+ active users across two tenants, with sub-three-second median latency. Its 9.1/10 score is the average result on a purpose-built 500+ question golden dataset, evaluated with RAGAS and validated through human review — not a score from a generic public benchmark. Releases are gated against the dataset, with low-scoring cases reviewed before changes are accepted. | https://github.com/WaiteM124/miles-rag |
 
-Acceptance: the flagship has no button or link and keeps its single paragraph. Each of the other three shows the explanation, then the labelled context paragraph. The hrefs match the table. The old `Meles123` and `Milesy1` repository URLs are not rendered.
+Acceptance: the flagship keeps its single summary paragraph and has exactly one link, the case study. It has no repository, demo, or results link. Each of the other three shows the explanation, then the labelled context paragraph. The hrefs match the table. The old `Meles123` and `Milesy1` repository URLs are not rendered.
 
 ### R10. Contact
 
@@ -97,17 +97,18 @@ Acceptance: no Instagram, no placeholder href, no dead button.
 
 ### R11. Light stack
 
-Static page, Vite, TypeScript, and `three`. Content in one data file.
+Static pages, Vite, TypeScript, and `three`. Homepage content in one data file. The case study is static HTML transcribed from `CASE_STUDY.md`.
 
-Acceptance: the only runtime dependency is `three@0.180.0`. Dev dependencies are Vite, TypeScript, and `@types/three` (three 0.180 does not ship its own types). No React, component library, icon package, font file, or bitmap.
+Acceptance: the only runtime dependency is `three@0.180.0`. Dev dependencies are Vite, TypeScript, and `@types/three` (three 0.180 does not ship its own types). No React, router, CMS, backend, component library, icon package, font file, or bitmap. The production build emits `dist/work/decision-intelligence/index.html`. There is no SPA fallback.
 
 ### R12. Document and access
 
 Acceptance:
 
-- `<title>`, meta description, viewport, Open Graph title and description, and Twitter card title and description are present. No invented canonical URL or share image.
+- Homepage: `<title>`, meta description, viewport, Open Graph title and description, and Twitter card title and description are present. The homepage has no canonical link and no share image.
+- Case-study page: title, meta description taken from the study dek, canonical URL exactly `https://ai.mileswaite.net/work/decision-intelligence/`, and Open Graph title and description are present. No `og:image`.
 - Body text contrast is at least 4.5:1. Focus is visible. Every link’s box is at least 44×44px.
-- No horizontal overflow at 375, 768, 1024, and 1440 CSS pixels.
+- No horizontal overflow at 375, 768, 1024, and 1440 CSS pixels on the homepage or the case-study page.
 
 ### R13. Production build
 
@@ -117,18 +118,48 @@ Acceptance: `npm run build` exits 0.
 
 Acceptance: the production preview is opened in a browser. Desktop and mobile screenshots are reviewed. The console has no errors, unhandled rejections, or missing assets. Internal anchors, external hrefs, reduced motion, and pause/resume are exercised.
 
-### R15. No deploy
+### R15. Production deploy
 
-Acceptance: nothing is deployed and the reference repo is not modified.
+The profile is deployed to `https://ai.mileswaite.net`.
+
+Acceptance: a Vercel CLI production deploy of project `mileswaite-profile` completes. The live case-study HTML contains “Architecture and design study”. The live homepage bundle contains “Engineering context”. Deployment protection stays on. The reference repo is not modified.
+
+### R16. Decision-intelligence case study
+
+A static page at `/work/decision-intelligence/`, transcribed from `CASE_STUDY.md`.
+
+Acceptance:
+
+- Vite multi-page input `work/decision-intelligence/index.html` is emitted as `dist/work/decision-intelligence/index.html`. Refreshing that path serves the file. No SPA fallback.
+- One H1: “Autonomous Enterprise Decision Intelligence Platform”.
+- “Architecture and design study” is a visible status label.
+- The illustrative recommendation is labelled as intended structure, not actual market research or performance results.
+- No benchmark scores, customer evidence, production claims, or repository links are added.
+- Governance boundaries and evaluation criteria from `CASE_STUDY.md` appear in the same order and wording.
+- “Back to selected work” links to `/#work`. The closing link returns to `/`.
+- The agent table has real headers. Narrow screens stack it into labelled agent sections and do not scroll the page sideways.
+- Homepage hero animation is unchanged.
+
+### R17. Engineering context
+
+A homepage section between the hero and Selected Work.
+
+Acceptance:
+
+- One heading: “Engineering context”.
+- Three left-aligned paragraphs, and no other claims: twenty years of enterprise risk architecture and real-time systems extended into current production AI work; floating maxima under opacity as a conceptual stress-testing approach; robust systems resist stress, and antifragile systems use evidence from stress and failure to strengthen evaluations, controls, and recovery paths through human engineering. Opacity means incomplete knowledge of future conditions rather than hidden system behaviour.
+- No floating type, opacity effect, cards, diagrams, or icons.
+- The hero and the Work/Contact navigation stay as they are.
 
 ## Scope exclusions
 
 - Blog, CMS, database, authentication, backend, analytics
-- Dark mode, extra pages, project pages for the flagship
+- Dark mode
 - Framer Motion entrance used on the old homepage
 - The generative-sketch, p5, and non-homepage cylinder variants
 - A time-corrected rewrite of the rotation speed
-- Deployment, DNS, and a social preview image
+- A social preview image
+- A repository, demo, or results link on the flagship
 
 ## Traceability
 
@@ -139,21 +170,24 @@ Acceptance: nothing is deployed and the reference repo is not modified.
 | R3 | New directory, workspace moved here | project root | Pass. `C:\Users\Miles\Desktop\Projects\mileswaite-profile` |
 | R4 | Single living requirements file | `REQUIREMENTS.md` | Pass |
 | R5 | Off-white `#f3f2ee`, ink `#1c1c1c`, muted `#5e5c57` (5.96:1), accent `#c41212` (5.45:1), 1px rules | `src/style.css` | Pass. Contrast measured. Screenshots show one accent and no cards |
-| R6 | Two text anchors | `src/content.ts`, `src/main.ts` | Pass. Clicks landed on `#work` and `#contact` |
-| R7 | Centred hero copy under the 17.5rem square. Intro measure `min(36rem, 100%)` with `text-wrap: balance`. Hero bottom padding `1.75rem` | `src/style.css` | Pass. Text centres match the animation. Desktop intro lines are 518px and 514px. At 375px the intro uses the full 343px column. Gap to Selected Work is 73px. Intro bottom is 550px at 1024×768 |
+| R6 | Homepage anchors scroll to `#work` and `#contact`. Case-study header links go to `/#work` and `/#contact` | `src/main.ts`, `work/decision-intelligence/index.html` | Pass. Homepage nav hrefs are `#work` and `#contact`. Case-study Work and Contact landed on `http://127.0.0.1:4173/#work` and `#contact`. Back to selected work landed on `/#work` with Selected work in view |
+| R7 | Centred hero copy under the 17.5rem square. Intro measure `min(36rem, 100%)` with `text-wrap: balance`. Hero bottom padding `1.75rem`. Engineering context now sits between the hero and Selected Work | `src/style.css`, `src/main.ts` | Pass. At 1024×768 the introduction bottom is 550px and its width is 576px. Engineering context is the next section |
 | R8 | One rAF loop, IO + visibility pause, DPR cap 2, SVG fallback, reduced-motion still | `src/hero.ts` | Pass. Paused off-screen and resumed running. Reduced-motion screenshots were byte-identical. Context loss replaced the canvas with 203 SVG arcs. DPR 2 produced a 560px buffer for the 280px box |
-| R9 | Flagship has no link. The three repositories use the WaiteM124 URLs. Each of those three opens with an explanation and follows with its evaluation or architecture context | `src/content.ts`, `src/main.ts` | Pass. The rendered page links AP Automation, governed-agent-toolkit, and miles-rag to `github.com/WaiteM124`. The flagship has no link. The metric lines are now the second paragraph |
+| R9 | Flagship summary unchanged, with exactly one link to the case study and no repository, demo, or results link. The other three keep their WaiteM124 URLs and context paragraphs | `src/content.ts`, `src/main.ts` | Pass. The flagship link is `/work/decision-intelligence/`. AP Automation, governed-agent-toolkit, and miles-rag still use the WaiteM124 URLs |
 | R10 | Contact email is `mailto:waite.miles@proton.me` | `src/content.ts`, `index.html` | Pass. Visible text and href match. `googlemail` is absent from the source and the build |
-| R11 | Vite + TS + three@0.180.0. `@types/three` is dev-only because 0.180 does not ship types | `package.json` | Pass. Production JS 483 kB (123 kB gzip), CSS 2.6 kB |
-| R12 | Head tags in HTML; focus and 44px targets in CSS | `index.html`, `src/style.css` | Pass. Overflow 0 at 375, 768, 1024, and 1440. Every link box is at least 44px. The Proton link focus ring is 2px `#c41212` |
+| R11 | Vite multi-page build. Homepage content in `src/content.ts`. Case study is static HTML. Runtime dependency remains `three@0.180.0` | `package.json`, `vite.config.ts`, `work/decision-intelligence/index.html` | Pass. Build emitted `dist/work/decision-intelligence/index.html`. JS 485.84 kB (124.08 kB gzip), CSS 4.77 kB (1.57 kB gzip). An `appType: 'mpa'` preview served the case study and returned 404 for a missing path |
+| R12 | Homepage head tags unchanged and still without a canonical or share image. Case-study page has title, dek description, canonical `https://ai.mileswaite.net/work/decision-intelligence/`, and Open Graph title and description. No `og:image` | `index.html`, `work/decision-intelligence/index.html`, `src/style.css` | Pass. Canonical and Open Graph match the study dek. No `og:image`. Overflow was 0 at 375, 768, 1024, and 1440 on both pages. Every measured link box was at least 44px tall. `:focus-visible` is a 2px accent outline |
 | R13 | `tsc --noEmit` then `vite build` | `package.json` | Pass. Exit 0 |
-| R14 | Preview the `dist` build | — | Pass after the refinement. Console was empty. The hero paused off-screen, resumed as one loop, stayed still for reduced motion, and fell back to 203 SVG arcs |
-| R15 | No deploy step | — | Pass. Nothing was deployed |
+| R14 | Preview the `dist` build, including the case-study URL and a reload | — | Pass. Direct loads of `/work/decision-intelligence/` returned the case study, including a second load. Hero canvas was `running` on screen and `paused` once off screen. CSS and JS returned 200 |
+| R15 | Production deploy to `https://ai.mileswaite.net` | Vercel project `mileswaite-profile` | Pending this deploy. An earlier CLI deploy already exists; the “nothing was deployed” note is stale |
+| R16 | Static case study transcribed from `CASE_STUDY.md` | `work/decision-intelligence/index.html`, `CASE_STUDY.md` | Pass. One H1. Status label and illustrative-output disclaimer are visible. Governance and evaluation sections are present in source order. The agent table stacks at 375px and remains a table from 768px up |
+| R17 | Engineering context between the hero and Selected Work | `src/content.ts`, `src/main.ts`, `src/style.css` | Pass. Three left-aligned paragraphs sit between the hero and Selected Work at desktop and at 375px. No overflow |
 
 ## Implementation notes
 
 - Homepage host: `app/page.tsx` dynamically imports `RotatingCylinderLinesR3F` (client only, after two animation frames). Sizing classes on that page run from 20rem to 36rem. This page uses a smaller square on purpose (R7) without changing camera or geometry.
 - React Three Fiber’s canvas defaults `dpr` to `[1, 2]` and does not pause when off-screen. The cap is preserved. Pause, reduced motion, and fallback are new and required by R8.
-- Open Graph has no `og:image` and no `og:url` because no public origin or image asset was specified (R12, exclusions).
-- Hero copy is centred with `text-align: center` on `.hero` only. The introduction measure is `min(36rem, 100%)`. Hero bottom padding is `1.75rem`, down from `3.25rem`, so the pause before Selected Work is shorter. Section padding is unchanged.
+- The homepage still has no `og:image` and no canonical link. The case-study page sets canonical and `og:url` to `https://ai.mileswaite.net/work/decision-intelligence/` and does not set `og:image`.
+- Hero copy is centred with `text-align: center` on `.hero` only. The introduction measure is `min(36rem, 100%)`. Hero bottom padding is `1.75rem`. Engineering context is the next section, using the same left-aligned section rule as Selected Work.
+- The case study is not generated from Markdown at build time. `CASE_STUDY.md` is the source, and `work/decision-intelligence/index.html` is the page. Vite’s multi-page input emits that file; `appType: 'mpa'` keeps a missing path from falling back to the homepage.
 - Contact address is `waite.miles@proton.me`. The contact GitHub profile remains `https://github.com/Milesy1`. Project repositories use `https://github.com/WaiteM124/ap-automation`, `governed-agent-toolkit`, and `miles-rag`.

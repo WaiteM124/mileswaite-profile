@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autonomous Enterprise Decision Intelligence Platform — Architecture and design study</title>
+    <meta
+      name="description"
+      content="Designing a multi-agent system that investigates complex enterprise decisions through independent domain expertise, structured evidence, adversarial review, and human accountability."
+    />
+    <meta name="author" content="Miles Waite" />
+    <meta name="theme-color" content="#f3f2ee" />
+    <link rel="canonical" href="https://ai.mileswaite.net/work/decision-intelligence/" />
+    <meta
+      property="og:title"
+      content="Autonomous Enterprise Decision Intelligence Platform — Architecture and design study"
+    />
+    <meta
+      property="og:description"
+      content="Designing a multi-agent system that investigates complex enterprise decisions through independent domain expertise, structured evidence, adversarial review, and human accountability."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ai.mileswaite.net/work/decision-intelligence/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Autonomous Enterprise Decision Intelligence Platform — Architecture and design study"
+    />
+    <meta
+      name="twitter:description"
+      content="Designing a multi-agent system that investigates complex enterprise decisions through independent domain expertise, structured evidence, adversarial review, and human accountability."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Cpath d='M6 24c5-10 15-10 20 0' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath d='M8 21c4-8 12-8 16 0' fill='none' stroke='%23ff0000' stroke-width='1.5'/%3E%3Cpath d='M10 18c3-6 9-6 12 0' fill='none' stroke='%2300ff00' stroke-width='1.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="shell article-shell">
+      <header class="site-header">
+        <p class="brand">Miles Waite</p>
+        <nav class="site-nav" aria-label="Homepage">
+          <a class="link" href="/#work">Work</a>
+          <a class="link" href="/#contact">Contact</a>
+        </nav>
+      </header>
+      <main>
+        <p class="return">
+          <a class="link" href="/#work">Back to selected work</a>
+        </p>
+        <article class="article">
+          <h1>Autonomous Enterprise Decision Intelligence Platform</h1>
+          <p class="kicker">Architecture and design study</p>
+          <p class="dek">
+            <em
+              >Designing a multi-agent system that investigates complex enterprise decisions through
+              independent domain expertise, structured evidence, adversarial review, and human
+              accountability.</em
+            >
+          </p>
+
+          <h2>Overview</h2>
+          <p>
+            Strategic enterprise decisions rarely belong to a single knowledge domain. A
+            market-expansion decision may depend on commercial demand, investment requirements,
+            delivery capacity, regulatory exposure, and operational risk.
+          </p>
+          <p>
+            A single-agent system can produce a fluent answer while hiding the assumptions and
+            uncertainties behind that answer. Assigning several agents to the same conversation does
+            not necessarily solve the problem: if they share the same context, permissions, and
+            perspective, the result is often distributed conversation rather than distributed
+            intelligence.
+          </p>
+          <p>
+            This project explores a different model:
+            <strong
+              >independent domain investigation, structured evidence exchange, independent critical
+              review, and explicit human decision authority</strong
+            >.
+          </p>
+
+          <h2>Worked scenario</h2>
+          <blockquote>
+            <p><strong>Should we expand into the German market next year?</strong></p>
+          </blockquote>
+          <p>
+            The objective is not to generate an immediate “yes” or “no”. It is to produce a decision
+            package containing supporting evidence, financial scenarios, assumptions,
+            counterarguments, confidence estimates, and recommended interventions.
+          </p>
+
+          <h2>Proposed architecture</h2>
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th scope="col">Agent</th>
+                <th scope="col">Independent responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Financial</th>
+                <td>
+                  Models investment requirements, funding constraints, expected returns, and upside,
+                  base-case, and downside scenarios.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Commercial</th>
+                <td>
+                  Investigates customer demand, market opportunity, competition, pricing, and
+                  potential routes to market.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Operational</th>
+                <td>
+                  Evaluates whether the organisation can deliver: capacity, capabilities,
+                  implementation constraints, and operational prerequisites.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Risk</th>
+                <td>
+                  Assesses financial, regulatory, commercial, and operational exposure, including
+                  conditions that could invalidate the investment case.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Critical Review</th>
+                <td>
+                  Challenges unsupported assumptions, identifies missing evidence, tests
+                  counterarguments, and requests targeted follow-up investigation.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Strategic</th>
+                <td>
+                  Synthesises the evidence and unresolved disagreement into a conditional
+                  recommendation for human decision-makers.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            The important distinction is that these agents represent
+            <strong>different domains, evidence sources, permissions, and failure modes</strong>.
+            None of them should see or control the entire decision process.
+          </p>
+
+          <h2>Decision workflow</h2>
+          <p class="workflow">
+            <strong
+              >Decision brief → Independent investigations → Evidence packages → Critical review →
+              Targeted revision → Strategic synthesis → Human decision → Monitoring</strong
+            >
+          </p>
+
+          <h3>1. Establish the decision brief</h3>
+          <p>The process begins with a structured brief defining:</p>
+          <ul>
+            <li>The decision and its timeframe</li>
+            <li>Investment and resource constraints</li>
+            <li>Scope and exclusions</li>
+            <li>Decision criteria</li>
+            <li>Known assumptions</li>
+            <li>Required evidence</li>
+            <li>The human decision owner</li>
+          </ul>
+          <p>This prevents each agent from silently answering a different version of the question.</p>
+
+          <h3>2. Conduct independent investigations</h3>
+          <p>
+            Each domain agent investigates using its own evidence sources and tools. Rather than
+            returning an unrestricted narrative, it produces a structured domain finding containing:
+          </p>
+          <ul>
+            <li>Claims supported by evidence</li>
+            <li>Evidence references and provenance</li>
+            <li>Assumptions</li>
+            <li>Uncertainties and missing information</li>
+            <li>Domain-specific confidence</li>
+            <li>Potential interventions</li>
+            <li>Conditions that would change the finding</li>
+          </ul>
+          <p>Agents can identify dependencies on other domains without taking control of those domains.</p>
+
+          <h3>3. Apply independent critical review</h3>
+          <p>
+            The Critical Review Agent does not simply summarise the findings or reward consensus. It
+            looks for:
+          </p>
+          <ul>
+            <li>Unsupported or weakly evidenced claims</li>
+            <li>Inconsistent financial and commercial assumptions</li>
+            <li>Missing downside scenarios</li>
+            <li>Conflicts between domain findings</li>
+            <li>Evidence that has been treated as more certain than its source warrants</li>
+            <li>Counterarguments that have not been addressed</li>
+          </ul>
+          <p>Its challenges are structured and directed back to the relevant domain agent.</p>
+
+          <h3>4. Run a bounded revision process</h3>
+          <p>
+            Domain agents respond to specific challenges by supplying evidence, revising assumptions,
+            or explicitly recording an unresolved limitation.
+          </p>
+          <p>
+            The process is bounded. Agents do not debate indefinitely, and unresolved disagreement
+            remains visible in the final recommendation rather than being removed to manufacture
+            consensus.
+          </p>
+
+          <h3>5. Produce the strategic recommendation</h3>
+          <p>
+            The Strategic Agent synthesises the final decision package. It can recommend proceeding,
+            proceeding conditionally, staging the investment, deferring the decision, or stopping.
+          </p>
+          <p>
+            It does <strong>not</strong> have authority to commit capital, approve expenditure, or
+            implement the recommendation.
+          </p>
+
+          <h2>A2A contracts rather than agent chat</h2>
+          <p>
+            The proposed agent interactions use typed decision artefacts rather than free-form
+            messages alone.
+          </p>
+
+          <h3>Domain finding</h3>
+          <ul>
+            <li>Domain and decision-brief reference</li>
+            <li>Findings</li>
+            <li>Evidence references</li>
+            <li>Assumptions</li>
+            <li>Uncertainties</li>
+            <li>Confidence and its rationale</li>
+            <li>Dependencies</li>
+            <li>Recommended interventions</li>
+          </ul>
+
+          <h3>Review challenge</h3>
+          <ul>
+            <li>Target claim or assumption</li>
+            <li>Reason for challenge</li>
+            <li>Severity</li>
+            <li>Missing evidence</li>
+            <li>Required response</li>
+            <li>Resolution status</li>
+          </ul>
+
+          <h3>Strategic recommendation</h3>
+          <ul>
+            <li>Recommended decision</li>
+            <li>Supporting evidence</li>
+            <li>Financial scenarios</li>
+            <li>Explicit assumptions</li>
+            <li>Counterarguments</li>
+            <li>Unresolved disagreements</li>
+            <li>Confidence and limitations</li>
+            <li>Recommended interventions</li>
+            <li>Monitoring and reconsideration triggers</li>
+          </ul>
+          <p>
+            These contracts make the decision process inspectable and allow individual claims to be
+            traced back to evidence.
+          </p>
+
+          <h2>Illustrative recommendation output</h2>
+          <p class="notice">
+            The following demonstrates the intended <strong>structure</strong>, not actual market
+            research or performance results.
+          </p>
+          <p><strong>Recommendation</strong></p>
+          <p>
+            Proceed with a time-bounded market-validation phase rather than committing immediately to
+            full expansion.
+          </p>
+          <p><strong>Supporting rationale</strong></p>
+          <p>
+            The commercial case depends on demand assumptions that require direct customer validation.
+            Operational readiness depends on delivery prerequisites that should be resolved before
+            larger investment. The financial case is sensitive to adoption, acquisition-cost, and
+            delivery-cost assumptions.
+          </p>
+          <p><strong>Conditions for progression</strong></p>
+          <ul>
+            <li>Secure sufficient evidence of customer demand</li>
+            <li>Validate pricing and acquisition assumptions</li>
+            <li>Confirm regulatory and operating requirements</li>
+            <li>Demonstrate delivery capacity</li>
+            <li>Cap expenditure during the validation phase</li>
+          </ul>
+          <p><strong>Counterargument</strong></p>
+          <p>
+            Deferring full entry could allow competitors to establish a stronger position. Evidence of
+            committed customer demand or rapidly increasing competitive pressure would justify
+            reconsidering the staged approach.
+          </p>
+          <p><strong>Confidence</strong></p>
+          <p>
+            Moderate, limited by uncertainty around customer demand and delivery economics. This
+            confidence statement reflects identifiable evidence gaps rather than a model-generated
+            score without explanation.
+          </p>
+          <p><strong>Monitoring triggers</strong></p>
+          <ul>
+            <li>Customer commitments or pipeline conversion</li>
+            <li>Changes in acquisition or delivery costs</li>
+            <li>Regulatory developments</li>
+            <li>Competitor activity</li>
+            <li>Availability of operational capacity</li>
+          </ul>
+
+          <h2>Governance and authority boundaries</h2>
+          <p>
+            The system produces <strong>decision support, not autonomous executive action</strong>.
+          </p>
+          <p>The design requires:</p>
+          <ul>
+            <li>Human ownership of the final decision</li>
+            <li>Read-only investigation by default</li>
+            <li>Least-privilege access to domain evidence</li>
+            <li>Deterministic controls for money, access, and production changes</li>
+            <li>Versioned evidence and recommendation artefacts</li>
+            <li>An auditable record of challenges, revisions, and unresolved disagreement</li>
+            <li>Explicit representation of missing evidence</li>
+          </ul>
+          <p>
+            Authority boundaries should be enforced outside the language model rather than relying on
+            instructions to behave responsibly.
+          </p>
+
+          <h2>Evaluation strategy</h2>
+          <p>
+            No performance claims are made at this stage. A future implementation should be evaluated
+            against a single-agent baseline using the same decision briefs and evidence access.
+          </p>
+
+          <h3>Decision and evidence quality</h3>
+          <ul>
+            <li>Evidence coverage and source validity</li>
+            <li>Unsupported-claim rate</li>
+            <li>Assumption identification</li>
+            <li>Counterargument quality</li>
+            <li>Financial-scenario consistency</li>
+            <li>Human assessment of recommendation usefulness</li>
+          </ul>
+
+          <h3>Critical-review effectiveness</h3>
+          <ul>
+            <li>Detection of seeded flawed assumptions</li>
+            <li>Identification of missing evidence</li>
+            <li>False or unnecessary challenge rate</li>
+            <li>Resolution rate for valid challenges</li>
+            <li>Frequency with which material disagreement survives into the final recommendation</li>
+          </ul>
+
+          <h3>Robustness and governance</h3>
+          <ul>
+            <li>Prompt-injection resistance</li>
+            <li>Forged-evidence detection</li>
+            <li>Cross-domain permission violations</li>
+            <li>Attempts to bypass human authority</li>
+            <li>Trace completeness and evidence provenance</li>
+          </ul>
+
+          <h3>Operational value</h3>
+          <ul>
+            <li>Cost and latency per completed decision package</li>
+            <li>Human review time</li>
+            <li>Rework caused by missing evidence</li>
+            <li>Performance relative to the single-agent baseline</li>
+            <li>Recommendation outcomes when monitored against subsequent information</li>
+          </ul>
+
+          <h2>Current status and next step</h2>
+          <p>
+            This is currently an <strong>architecture and design study</strong>. The agent
+            responsibilities, evidence contracts, critical-review process, governance boundaries, and
+            evaluation strategy are defined; benchmark results are not yet claimed.
+          </p>
+          <p>
+            The next step would be a <strong>single-decision vertical slice</strong> using the
+            German-expansion scenario:
+          </p>
+          <ol>
+            <li>Implement the structured decision brief and evidence contracts.</li>
+            <li>Connect a small number of controlled domain evidence sources.</li>
+            <li>Run the independent investigations and critical-review loop.</li>
+            <li>Generate the structured strategic recommendation.</li>
+            <li>Compare the result with a single-agent baseline.</li>
+            <li>Test seeded assumption failures, prompt injection, and forged evidence.</li>
+            <li>Instrument the recommendation for later reconsideration as new information arrives.</li>
+          </ol>
+          <p>
+            <strong
+              >The design goal is not consensus. It is an auditable recommendation that makes
+              evidence, assumptions, disagreement, and uncertainty visible.</strong
+            >
+          </p>
+          <p class="closing-link">
+            <a class="link" href="/">Back to the homepage</a>
+          </p>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

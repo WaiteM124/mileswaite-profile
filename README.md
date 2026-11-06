@@ -1,6 +1,6 @@
 # Miles Waite
 
-A one-page profile. The only moving part is the cylinder from the homepage of mileswaite.net.
+A profile site. The homepage carries the cylinder from mileswaite.net, an engineering-context note, and selected work. The flagship case study is a second static page. The public origin is https://ai.mileswaite.net.
 
 ## Hero
 
@@ -37,15 +37,21 @@ The preview serves the `dist` folder at http://127.0.0.1:4173.
 
 ## Edit the page
 
-Change copy, work items, and links in `src/content.ts`.
+Change homepage copy, the engineering-context paragraphs, work items, and links in `src/content.ts`.
 
-The flagship project has no link on purpose. Add one only when a real demo or repository URL exists.
+Engineering context sits between the hero and Selected Work. It is three short paragraphs: the enterprise risk and real-time background, floating maxima under opacity as a conceptual stress-testing approach, and the robust/antifragile distinction. Keep that section as text. Do not turn it into floating type, an opacity effect, or an animation.
+
+The flagship summary stays as it is. Its only link is “Read the architecture and design case study”, pointing at `/work/decision-intelligence/`. Do not add a repository, demo, or results link until a real URL exists.
+
+The case study is a static page at `work/decision-intelligence/index.html`. Its public path is `/work/decision-intelligence/` and its canonical URL is `https://ai.mileswaite.net/work/decision-intelligence/`. `CASE_STUDY.md` is the source text. When the study changes, update that file and transcribe the same wording into the HTML page. Keep the “Architecture and design study” label, and keep the illustrative recommendation labelled as structure rather than market research or performance results.
+
+Header Work and Contact on the homepage scroll to `#work` and `#contact`. On the case-study page they point to `/#work` and `/#contact`.
 
 The other three projects link to the WaiteM124 repositories in `src/content.ts`. Each of those entries is an explanation followed by an evaluation or architecture context. The header contact GitHub link is the separate profile at `https://github.com/Milesy1`.
 
 The visible address is `waite.miles@proton.me`. It is set in `src/content.ts` and repeated in the `noscript` block in `index.html`.
 
-Keep the `<title>` and description in `index.html` aligned with the introduction. There is no share image and no canonical URL, because this project has no public origin and no bitmap assets.
+Keep the homepage `<title>` and description in `index.html` aligned with the introduction. The homepage has no canonical link and no share image. The case-study page has a title, a description taken from the study dek, a canonical URL, and Open Graph title and description. Neither page has an `og:image`.
 
 Do not add a font, icon package, or photograph. Colour and type live in `src/style.css`.
 

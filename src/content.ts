@@ -20,6 +20,8 @@ export interface ProfileContent {
   name: string;
   role: string;
   introduction: string;
+  engineeringHeading: string;
+  engineering: string[];
   workHeading: string;
   work: WorkItem[];
   contactHeading: string;
@@ -31,6 +33,12 @@ export const profile: ProfileContent = {
   role: 'Distinguished Frontier Engineer',
   introduction:
     'Building governed, evaluation-driven AI systems that reason over live enterprise data and take real actions under auditable human control.',
+  engineeringHeading: 'Engineering context',
+  engineering: [
+    'Twenty years of enterprise risk architecture and real-time systems now extend into current production AI work.',
+    'Floating maxima under opacity is a conceptual stress-testing approach.',
+    'Robust systems resist stress. Antifragile systems use evidence from stress and failure to strengthen evaluations, controls, and recovery paths through human engineering. Opacity means incomplete knowledge of future conditions rather than hidden system behaviour.',
+  ],
   workHeading: 'Selected work',
   work: [
     {
@@ -38,6 +46,10 @@ export const profile: ProfileContent = {
       title: 'Autonomous Enterprise Decision Intelligence Platform',
       summary:
         'A multi-agent platform for investigating complex enterprise decisions. Specialist agents analyse independent business domains, critically review findings, and synthesise evidence into a structured recommendation for human decision-makers.',
+      link: {
+        label: 'Read the architecture and design case study',
+        href: '/work/decision-intelligence/',
+      },
     },
     {
       title: 'Self-Learning AP Automation',

@@ -39,6 +39,21 @@ function renderPage(): HTMLElement {
     { 'aria-labelledby': 'hero-name' },
   );
 
+  const engineering = element(
+    'section',
+    'section',
+    [
+      element('h2', undefined, [], profile.engineeringHeading, { id: 'engineering-heading' }),
+      element(
+        'div',
+        'engineering-copy',
+        profile.engineering.map((paragraph) => element('p', undefined, [], paragraph)),
+      ),
+    ],
+    undefined,
+    { id: 'engineering', 'aria-labelledby': 'engineering-heading' },
+  );
+
   const work = element(
     'section',
     'section',
@@ -61,7 +76,10 @@ function renderPage(): HTMLElement {
     { id: 'contact', 'aria-labelledby': 'contact-heading' },
   );
 
-  return element('div', 'shell', [header, element('main', undefined, [hero, work, contact])]);
+  return element('div', 'shell', [
+    header,
+    element('main', undefined, [hero, engineering, work, contact]),
+  ]);
 }
 
 function renderWork(item: WorkItem): HTMLElement {

@@ -34,7 +34,9 @@ h1,
 h2,
 h3,
 p,
-ul {
+ul,
+ol,
+blockquote {
   margin: 0;
   padding: 0;
 }
@@ -213,9 +215,185 @@ h3 {
   border: 0;
 }
 
+.engineering-copy p {
+  max-width: 38rem;
+  line-height: 1.6;
+}
+
+.engineering-copy p + p {
+  margin-top: 0.85rem;
+}
+
+.article-shell {
+  width: min(70ch, 42rem, calc(100% - 2rem));
+}
+
+.return {
+  padding-top: 0.75rem;
+}
+
+.article {
+  padding-top: 0.35rem;
+  padding-bottom: 3.5rem;
+  overflow-wrap: break-word;
+}
+
+.article > * + * {
+  margin-top: 0.9rem;
+}
+
+.article h1 {
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.article .kicker {
+  margin-bottom: 0;
+}
+
+.dek {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.article h2 {
+  margin-top: 2.6rem;
+  margin-bottom: 0;
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+.article h3 {
+  margin-top: 1.7rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.article p,
+.article li {
+  line-height: 1.65;
+}
+
+.article ul,
+.article ol {
+  padding-left: 1.35rem;
+}
+
+.article ul {
+  list-style: disc;
+}
+
+.article ol {
+  list-style: decimal;
+}
+
+.article li + li {
+  margin-top: 0.35rem;
+}
+
+.article blockquote {
+  margin-bottom: 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 2px solid var(--accent);
+}
+
+.notice {
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+}
+
+.workflow {
+  line-height: 1.65;
+}
+
+.agent-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  line-height: 1.55;
+}
+
+.agent-table th,
+.agent-table td {
+  padding: 0.75rem 0.85rem 0.75rem 0;
+  vertical-align: top;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: break-word;
+}
+
+.agent-table thead th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.agent-table th[scope='row'] {
+  width: 9.5rem;
+  font-weight: 500;
+}
+
+.closing-link {
+  margin-top: 2.6rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--line);
+}
+
 .noscript {
   width: min(40rem, calc(100% - 2rem));
   margin: 2rem auto;
+}
+
+@media (max-width: 639px) {
+  .agent-table,
+  .agent-table tbody,
+  .agent-table tr,
+  .agent-table th,
+  .agent-table td {
+    display: block;
+    width: auto;
+  }
+
+  .agent-table {
+    position: relative;
+    table-layout: auto;
+  }
+
+  .agent-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .agent-table th,
+  .agent-table td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .agent-table tbody tr {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .agent-table th[scope='row'] {
+    width: auto;
+    margin-bottom: 0.35rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
