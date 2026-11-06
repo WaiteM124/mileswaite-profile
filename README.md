@@ -41,7 +41,7 @@ Change copy, work items, and links in `src/content.ts`.
 
 The flagship project has no link on purpose. Add one only when a real demo or repository URL exists.
 
-The other three projects link to the WaiteM124 repositories in `src/content.ts`. The header contact GitHub link is the separate profile at `https://github.com/Milesy1`.
+The other three projects link to the WaiteM124 repositories in `src/content.ts`. Each of those entries is an explanation followed by an evaluation or architecture context. The header contact GitHub link is the separate profile at `https://github.com/Milesy1`.
 
 The visible address is `waite.miles@proton.me`. It is set in `src/content.ts` and repeated in the `noscript` block in `index.html`.
 

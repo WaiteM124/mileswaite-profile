@@ -69,6 +69,7 @@ function renderWork(item: WorkItem): HTMLElement {
   if (item.kicker) children.push(element('p', 'kicker', [], item.kicker));
   children.push(element('h3', undefined, [], item.title));
   children.push(element('p', 'summary', [], item.summary));
+  if (item.context) children.push(element('p', 'context', [], item.context));
   if (item.link) children.push(textLink(item.link.href, item.link.label));
   return element('article', 'work-item', children);
 }
