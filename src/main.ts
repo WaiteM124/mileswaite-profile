@@ -1,17 +1,28 @@
 import './style.css';
 import { profile, type ContactLink, type WorkItem } from './content';
 import { mountHero } from './hero';
+import { mountScrollProgress } from './scroll-progress';
+import { createThemeToggle } from './theme';
 
 const app = document.querySelector('#app');
 if (!app) throw new Error('Missing #app');
 
 app.append(renderPage());
+document.body.append(createThemeToggle());
 
 const visual = app.querySelector<HTMLElement>('[data-hero]');
 if (!visual) throw new Error('Missing hero');
 
-const cleanup = mountHero(visual);
-window.addEventListener('pagehide', () => cleanup(), { once: true });
+const cleanupHero = mountHero(visual);
+const cleanupScroll = mountScrollProgress();
+window.addEventListener(
+  'pagehide',
+  () => {
+    cleanupHero();
+    cleanupScroll();
+  },
+  { once: true },
+);
 
 function renderPage(): HTMLElement {
   const header = element('header', 'site-header', [

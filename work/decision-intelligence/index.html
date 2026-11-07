@@ -10,6 +10,24 @@
     />
     <meta name="author" content="Miles Waite" />
     <meta name="theme-color" content="#f3f2ee" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('miles-theme');
+          theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.headerInk = Math.random() < 0.5 ? 'red' : 'green';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#141413' : '#f3f2ee');
+      })();
+    </script>
     <link rel="canonical" href="https://ai.mileswaite.net/work/decision-intelligence/" />
     <meta
       property="og:title"
@@ -37,6 +55,15 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">D</button>
+    <script>
+      (function () {
+        var button = document.querySelector('[data-theme-toggle]');
+        var dark = document.documentElement.dataset.theme === 'dark';
+        button.textContent = dark ? 'L' : 'D';
+        button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      })();
+    </script>
     <div class="shell article-shell">
       <header class="site-header">
         <p class="brand">Miles Waite</p>
@@ -150,6 +177,24 @@
             None of them should see or control the entire decision process.
           </p>
 
+          <h3>Architecture and authority</h3>
+          <p>
+            Solid cyan marks evidence and artefact flow. Dashed amber marks bounded review and
+            revision. Green marks human authority only.
+          </p>
+          <figure>
+            <img
+              src="/images/architecture-authority.png"
+              width="2880"
+              height="2440"
+              alt="Architecture and authority diagram. A decision brief reaches independent domain agents, which produce structured findings. Critical review can challenge a finding. Strategic synthesis prepares a conditional recommendation. Human decision ownership and separately controlled execution sit outside agent authority."
+            />
+            <figcaption>
+              Proposed architecture and authority design. Illustrative design study, not production telemetry or system output.
+            </figcaption>
+            <a class="link" href="/images/architecture-authority.png">Open full-size diagram</a>
+          </figure>
+
           <h2>Decision workflow</h2>
           <p class="workflow">
             <strong
@@ -228,44 +273,1139 @@
             The proposed agent interactions use typed decision artefacts rather than free-form
             messages alone.
           </p>
-
-          <h3>Domain finding</h3>
-          <ul>
-            <li>Domain and decision-brief reference</li>
-            <li>Findings</li>
-            <li>Evidence references</li>
-            <li>Assumptions</li>
-            <li>Uncertainties</li>
-            <li>Confidence and its rationale</li>
-            <li>Dependencies</li>
-            <li>Recommended interventions</li>
-          </ul>
-
-          <h3>Review challenge</h3>
-          <ul>
-            <li>Target claim or assumption</li>
-            <li>Reason for challenge</li>
-            <li>Severity</li>
-            <li>Missing evidence</li>
-            <li>Required response</li>
-            <li>Resolution status</li>
-          </ul>
-
-          <h3>Strategic recommendation</h3>
-          <ul>
-            <li>Recommended decision</li>
-            <li>Supporting evidence</li>
-            <li>Financial scenarios</li>
-            <li>Explicit assumptions</li>
-            <li>Counterarguments</li>
-            <li>Unresolved disagreements</li>
-            <li>Confidence and limitations</li>
-            <li>Recommended interventions</li>
-            <li>Monitoring and reconsideration triggers</li>
-          </ul>
+          <p>These contracts define structured application-level artefacts exchanged between independent agents. They deliberately replace free-form inter-agent chat with versioned, validatable messages that carry provenance, assumptions, uncertainty, review state and authority limits.</p>
+          <p>“A2A” here describes the proposed agent-to-agent artefact layer. These schemas are transport-independent and do <strong>not</strong> claim conformance to a particular external A2A protocol.</p>
+          <p>The intended flow is: <strong>Decision brief → DomainFinding → ReviewChallenge → revised DomainFinding → StrategicRecommendation → separate human decision</strong>.</p>
+          <p>A StrategicRecommendation cannot approve itself. Human approval must exist as a separate authenticated record in the decision system of record. Any consequential execution must pass through a separate approval-bound tool gateway.</p>
+          <p>All identifiers, timestamps, evidence locators and scenario content below are illustrative. They demonstrate contract shape and validation behaviour; they are not market research, customer evidence, execution records or benchmark results. Status: Architecture and design study — not implemented-system output.</p>
           <p>
             These contracts make the decision process inspectable and allow individual claims to be
             traced back to evidence.
+          </p>
+          <h3>DomainFinding</h3>
+          <p>A domain agent’s bounded analytical output. It must identify its domain, state its evidence and assumptions, explain uncertainty and confidence, and enter review without granting itself authority.</p>
+          <p><strong>Illustrative payload</strong></p>
+          <pre><code>{
+  "contract": "domain-finding/v1",
+  "message_id": "f1000000-0000-4000-8000-000000000001",
+  "decision_brief_id": "7e0b38c0-72c0-4c6f-a23c-bca05a790001",
+  "correlation_id": "c0b15152-38eb-4a93-9118-83833c4d7001",
+  "causation_id": "b1000000-0000-4000-8000-000000000001",
+  "trace_id": "0123456789abcdef0123456789abcdef",
+  "producer": {
+    "agent_id": "financial-agent",
+    "role": "domain_agent",
+    "instance_id": "financial-agent-example-01"
+  },
+  "created_at": "2026-01-15T10:30:00Z",
+  "finding_id": "f1000000-0000-4000-8000-000000000101",
+  "finding_version": 1,
+  "domain": "financial",
+  "finding": {
+    "statement": "Under the illustrative cost and demand assumptions, a bounded pilot is financially preferable to immediate full-market entry.",
+    "scope": "Illustrative German-market expansion scenario only.",
+    "implications": [
+      "Do not treat the pilot case as evidence for immediate full-market entry."
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-fin-001",
+      "source_type": "scenario_assumption",
+      "locator": "urn:case-study:germany-expansion:financial-assumptions:001",
+      "captured_at": "2026-01-15T10:20:00Z",
+      "provenance_status": "illustrative",
+      "summary": "Hypothetical pilot-cost and demand assumptions supplied by the design scenario; not observed market data."
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "asm-fin-001",
+      "statement": "Pilot costs remain within the scenario envelope.",
+      "sensitivity": "high"
+    }
+  ],
+  "uncertainty": [
+    {
+      "statement": "Independent demand, acquisition-cost and regulatory-cost evidence has not been supplied.",
+      "materiality": "high",
+      "resolution": "Obtain independently sourced evidence before any expenditure decision."
+    }
+  ],
+  "confidence": {
+    "band": "low",
+    "rationale": "The statement tests internal scenario logic only; it is not validated market research."
+  },
+  "review": {
+    "status": "pending",
+    "revision_round": 0
+  },
+  "authority": {
+    "may_commit_capital": false,
+    "may_approve_expenditure": false,
+    "may_execute": false
+  }
+}</code></pre>
+          <details>
+            <summary>View JSON Schema</summary>
+            <pre><code>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.mileswaite.net/contracts/domain-finding/v1.schema.json",
+  "title": "DomainFinding",
+  "description": "Proposed, transport-independent domain-analysis artefact for the decision-intelligence design study.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "message_id",
+    "decision_brief_id",
+    "correlation_id",
+    "causation_id",
+    "trace_id",
+    "producer",
+    "created_at",
+    "finding_id",
+    "finding_version",
+    "domain",
+    "finding",
+    "evidence",
+    "assumptions",
+    "uncertainty",
+    "confidence",
+    "review",
+    "authority"
+  ],
+  "properties": {
+    "contract": {
+      "const": "domain-finding/v1"
+    },
+    "message_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision_brief_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "role",
+        "instance_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "const": "domain_agent"
+        },
+        "instance_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finding_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "finding_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "domain": {
+      "enum": [
+        "financial",
+        "commercial",
+        "operational",
+        "risk"
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "scope",
+        "implications"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "implications": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "source_type",
+          "locator",
+          "captured_at",
+          "provenance_status",
+          "summary"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^ev-[a-z0-9-]+$"
+          },
+          "source_type": {
+            "enum": [
+              "system_record",
+              "document",
+              "external_source",
+              "human_input",
+              "scenario_assumption"
+            ]
+          },
+          "locator": {
+            "type": "string",
+            "format": "uri"
+          },
+          "captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "provenance_status": {
+            "enum": [
+              "observed",
+              "derived",
+              "illustrative"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assumption_id",
+          "statement",
+          "sensitivity"
+        ],
+        "properties": {
+          "assumption_id": {
+            "type": "string",
+            "pattern": "^asm-[a-z0-9-]+$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sensitivity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "statement",
+          "materiality",
+          "resolution"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "materiality": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "band",
+        "rationale"
+      ],
+      "properties": {
+        "band": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "revision_round"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "under_review",
+            "accepted",
+            "revision_requested"
+          ]
+        },
+        "revision_round": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_commit_capital",
+        "may_approve_expenditure",
+        "may_execute"
+      ],
+      "properties": {
+        "may_commit_capital": {
+          "const": false
+        },
+        "may_approve_expenditure": {
+          "const": false
+        },
+        "may_execute": {
+          "const": false
+        }
+      }
+    }
+  }
+}</code></pre>
+          </details>
+          <h3>ReviewChallenge</h3>
+          <p>A critical-review artefact targeting exactly one immutable <code>DomainFinding</code> version. A challenge requests a bounded revision; it does not silently rewrite the original finding.</p>
+          <p><strong>Illustrative payload</strong></p>
+          <pre><code>{
+  "contract": "review-challenge/v1",
+  "message_id": "f2000000-0000-4000-8000-000000000001",
+  "decision_brief_id": "7e0b38c0-72c0-4c6f-a23c-bca05a790001",
+  "correlation_id": "c0b15152-38eb-4a93-9118-83833c4d7001",
+  "causation_id": "f1000000-0000-4000-8000-000000000001",
+  "trace_id": "0123456789abcdef0123456789abcdef",
+  "producer": {
+    "agent_id": "critical-review-agent",
+    "role": "critical_review_agent",
+    "instance_id": "critical-review-agent-example-01"
+  },
+  "created_at": "2026-01-15T10:35:00Z",
+  "challenge_id": "f2000000-0000-4000-8000-000000000101",
+  "target": {
+    "finding_id": "f1000000-0000-4000-8000-000000000101",
+    "finding_version": 1,
+    "finding_message_id": "f1000000-0000-4000-8000-000000000001"
+  },
+  "challenge_type": "evidence_gap",
+  "severity": "high",
+  "statement": "The finding moves from scenario arithmetic to a market-entry preference without independent demand or cost evidence.",
+  "evidence_refs": [
+    "ev-fin-001"
+  ],
+  "requested_revision": {
+    "action": "narrow_claim",
+    "acceptance_criteria": [
+      "Label the pilot statement as conditional on the scenario assumptions.",
+      "Remove any implication for immediate full-market entry.",
+      "Record the independent-evidence gap explicitly."
+    ]
+  },
+  "review_round": 1,
+  "resolution": {
+    "status": "open",
+    "resolved_by_finding_id": null
+  },
+  "authority": {
+    "may_commit_capital": false,
+    "may_approve_expenditure": false,
+    "may_execute": false
+  }
+}</code></pre>
+          <details>
+            <summary>View JSON Schema</summary>
+            <pre><code>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.mileswaite.net/contracts/review-challenge/v1.schema.json",
+  "title": "ReviewChallenge",
+  "description": "Proposed critical-review artefact targeting one immutable DomainFinding version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "message_id",
+    "decision_brief_id",
+    "correlation_id",
+    "causation_id",
+    "trace_id",
+    "producer",
+    "created_at",
+    "challenge_id",
+    "target",
+    "challenge_type",
+    "severity",
+    "statement",
+    "evidence_refs",
+    "requested_revision",
+    "review_round",
+    "resolution",
+    "authority"
+  ],
+  "properties": {
+    "contract": {
+      "const": "review-challenge/v1"
+    },
+    "message_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision_brief_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "role",
+        "instance_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "const": "critical_review_agent"
+        },
+        "instance_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "challenge_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "finding_version",
+        "finding_message_id"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "finding_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "finding_message_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "challenge_type": {
+      "enum": [
+        "evidence_gap",
+        "unsupported_inference",
+        "stale_evidence",
+        "permission_violation",
+        "scope_violation",
+        "contradiction",
+        "uncertainty_omission"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^ev-[a-z0-9-]+$"
+      },
+      "uniqueItems": true
+    },
+    "requested_revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "provide_evidence",
+            "narrow_claim",
+            "recompute",
+            "add_uncertainty",
+            "escalate_to_human"
+          ]
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "review_round": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "resolved_by_finding_id"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "open",
+            "resolved",
+            "superseded"
+          ]
+        },
+        "resolved_by_finding_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_commit_capital",
+        "may_approve_expenditure",
+        "may_execute"
+      ],
+      "properties": {
+        "may_commit_capital": {
+          "const": false
+        },
+        "may_approve_expenditure": {
+          "const": false
+        },
+        "may_execute": {
+          "const": false
+        }
+      }
+    }
+  }
+}</code></pre>
+          </details>
+          <h3>StrategicRecommendation</h3>
+          <p>A conditional synthesis of reviewed domain findings. It preserves unresolved disagreement and monitoring triggers. The schema makes <code>human_decision.status</code> permanently <code>pending</code> and <code>execution.status</code> permanently <code>not_authorised</code> within this agent-produced artefact.</p>
+          <p><strong>Illustrative payload</strong></p>
+          <pre><code>{
+  "contract": "strategic-recommendation/v1",
+  "message_id": "f3000000-0000-4000-8000-000000000001",
+  "decision_brief_id": "7e0b38c0-72c0-4c6f-a23c-bca05a790001",
+  "correlation_id": "c0b15152-38eb-4a93-9118-83833c4d7001",
+  "causation_id": "f2000000-0000-4000-8000-000000000001",
+  "trace_id": "0123456789abcdef0123456789abcdef",
+  "producer": {
+    "agent_id": "strategic-agent",
+    "role": "strategic_agent",
+    "instance_id": "strategic-agent-example-01"
+  },
+  "created_at": "2026-01-15T10:45:00Z",
+  "recommendation_id": "f3000000-0000-4000-8000-000000000101",
+  "based_on": [
+    {
+      "finding_id": "f1000000-0000-4000-8000-000000000101",
+      "finding_version": 2,
+      "domain": "financial"
+    },
+    {
+      "finding_id": "f1000000-0000-4000-8000-000000000102",
+      "finding_version": 1,
+      "domain": "commercial"
+    },
+    {
+      "finding_id": "f1000000-0000-4000-8000-000000000103",
+      "finding_version": 1,
+      "domain": "operational"
+    },
+    {
+      "finding_id": "f1000000-0000-4000-8000-000000000104",
+      "finding_version": 1,
+      "domain": "risk"
+    }
+  ],
+  "review": {
+    "status": "completed_with_unresolved_disagreement",
+    "review_rounds": 2,
+    "challenge_ids": [
+      "f2000000-0000-4000-8000-000000000101"
+    ],
+    "unresolved_disagreement": [
+      {
+        "topic": "Appropriate pilot scale",
+        "positions": [
+          "Commercial favours a larger pilot to improve signal quality.",
+          "Risk favours a smaller pilot to limit downside exposure."
+        ],
+        "why_unresolved": "The illustrative scenario contains no validated evidence resolving the trade-off."
+      }
+    ]
+  },
+  "recommendation": {
+    "decision": "Recommend a bounded, reversible pilot only after specified evidence gates are met; do not approve full-market entry.",
+    "rationale": "A conditional pilot limits irreversible exposure while testing the assumptions on which the commercial and financial findings depend.",
+    "conditions": [
+      "A human decision owner approves the pilot scope and expenditure separately.",
+      "Independent demand and cost evidence is reviewed before approval.",
+      "The operational and risk findings confirm that the pilot remains reversible."
+    ],
+    "alternatives_considered": [
+      {
+        "option": "Immediate full-market entry",
+        "reason_not_selected": "The illustrative evidence does not resolve material demand, cost or execution uncertainty."
+      },
+      {
+        "option": "No further investigation",
+        "reason_not_selected": "A bounded pilot could reduce uncertainty if the human owner accepts the residual risk."
+      }
+    ]
+  },
+  "assumptions": [
+    "A pilot can be stopped without creating material downstream obligations."
+  ],
+  "uncertainties": [
+    "The scenario does not establish actual German demand, acquisition costs, regulatory effort or delivery capacity."
+  ],
+  "monitoring": [
+    {
+      "trigger_id": "trg-pilot-001",
+      "condition": "Validated evidence invalidates a material pilot assumption.",
+      "action": "reopen_decision",
+      "owner_role": "human_decision_owner"
+    },
+    {
+      "trigger_id": "trg-pilot-002",
+      "condition": "The approved pilot boundary or reversal path is no longer intact.",
+      "action": "pause_execution",
+      "owner_role": "human_decision_owner"
+    }
+  ],
+  "human_decision": {
+    "status": "pending",
+    "decision_ref": null
+  },
+  "execution": {
+    "status": "not_authorised",
+    "execution_ref": null
+  },
+  "authority": {
+    "may_commit_capital": false,
+    "may_approve_expenditure": false,
+    "may_execute": false
+  }
+}</code></pre>
+          <p><strong>Example-chain note:</strong> the review challenge targets financial finding version 1. The recommendation intentionally references version 2, representing the revised finding after that challenge. Version 2 is not reproduced here; the reference illustrates revision semantics rather than claiming a completed run.</p>
+          <details>
+            <summary>View JSON Schema</summary>
+            <pre><code>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.mileswaite.net/contracts/strategic-recommendation/v1.schema.json",
+  "title": "StrategicRecommendation",
+  "description": "Proposed conditional recommendation. It cannot encode human approval or authorise execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "message_id",
+    "decision_brief_id",
+    "correlation_id",
+    "causation_id",
+    "trace_id",
+    "producer",
+    "created_at",
+    "recommendation_id",
+    "based_on",
+    "review",
+    "recommendation",
+    "assumptions",
+    "uncertainties",
+    "monitoring",
+    "human_decision",
+    "execution",
+    "authority"
+  ],
+  "properties": {
+    "contract": {
+      "const": "strategic-recommendation/v1"
+    },
+    "message_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision_brief_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "role",
+        "instance_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "const": "strategic_agent"
+        },
+        "instance_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "recommendation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "based_on": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "finding_version",
+          "domain"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "finding_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "domain": {
+            "enum": [
+              "financial",
+              "commercial",
+              "operational",
+              "risk"
+            ]
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "review_rounds",
+        "challenge_ids",
+        "unresolved_disagreement"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "in_progress",
+            "blocked",
+            "completed",
+            "completed_with_unresolved_disagreement"
+          ]
+        },
+        "review_rounds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "challenge_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "unresolved_disagreement": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "topic",
+              "positions",
+              "why_unresolved"
+            ],
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1
+              },
+              "positions": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "why_unresolved": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed_with_unresolved_disagreement"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "unresolved_disagreement": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "unresolved_disagreement": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision",
+        "rationale",
+        "conditions",
+        "alternatives_considered"
+      ],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "alternatives_considered": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "option",
+              "reason_not_selected"
+            ],
+            "properties": {
+              "option": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason_not_selected": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "monitoring": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "trigger_id",
+          "condition",
+          "action",
+          "owner_role"
+        ],
+        "properties": {
+          "trigger_id": {
+            "type": "string",
+            "pattern": "^trg-[a-z0-9-]+$"
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "enum": [
+              "reopen_decision",
+              "pause_execution",
+              "notify_owner"
+            ]
+          },
+          "owner_role": {
+            "const": "human_decision_owner"
+          }
+        }
+      }
+    },
+    "human_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "decision_ref"
+      ],
+      "properties": {
+        "status": {
+          "const": "pending"
+        },
+        "decision_ref": {
+          "type": "null"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "execution_ref"
+      ],
+      "properties": {
+        "status": {
+          "const": "not_authorised"
+        },
+        "execution_ref": {
+          "type": "null"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_commit_capital",
+        "may_approve_expenditure",
+        "may_execute"
+      ],
+      "properties": {
+        "may_commit_capital": {
+          "const": false
+        },
+        "may_approve_expenditure": {
+          "const": false
+        },
+        "may_execute": {
+          "const": false
+        }
+      }
+    }
+  }
+}</code></pre>
+          </details>
+          <h3>Validation and authority</h3>
+          <p>
+            JSON Schema alone is insufficient. Schema validation alone is not the security boundary. The contract layer is not the control boundary by itself. Schemas make intent and evidence explicit; authenticated identity, policy enforcement, immutable revision history, human decision records and an independent execution gateway make the authority boundary real.
+            The checks below are the proposed design. This page does not claim they are
+            implemented, and it does not claim that human approval or execution has occurred.
+          </p>
+          <ul>
+            <li>Exact contract-version validation. Consumers must reject an unsupported contract version.</li>
+            <li>Authenticated producer identity. The runtime must authenticate the producer and require that identity to match <code>producer.agent_id</code> and <code>producer.role</code>. The JSON declaration alone proves nothing.</li>
+            <li>Decision-brief and correlation checks. Artefacts in one workflow must share the authorised decision-brief id, correlation id, and trace id, and the causation id must reference an existing parent event.</li>
+            <li>Allow-listed evidence resolution. Every evidence locator is resolved through an allow-listed evidence registry. Arbitrary agent-supplied URLs are not fetched.</li>
+            <li>Immutable finding revisions. A revision creates a new message id, retains the finding id, and increments the finding version. The challenged artefact is never mutated in place.</li>
+            <li>Maximum three review rounds. Exhausting that bound escalates the disagreement to the human owner.</li>
+            <li>Required domain coverage and visible disagreement. A recommendation must reference reviewed financial, commercial, operational, and risk findings. Unresolved disagreement stays visible.</li>
+            <li>Separate human approval and independent execution-gateway enforcement. Human approval is a separate authenticated record. The execution gateway must independently verify that approval, the approved scope, and current policy. A recommendation is never an execution credential.</li>
+          </ul>
+          <p>
+            <a class="link" href="/downloads/A2A_CONTRACTS.md" download="A2A_CONTRACTS.md">Download the complete A2A contract specification</a>
           </p>
 
           <h2>Illustrative recommendation output</h2>
@@ -407,5 +1547,6 @@
         </article>
       </main>
     </div>
+    <script type="module" src="/src/case-study.ts"></script>
   </body>
 </html>

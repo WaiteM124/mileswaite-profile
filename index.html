@@ -10,6 +10,24 @@
     />
     <meta name="author" content="Miles Waite" />
     <meta name="theme-color" content="#f3f2ee" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('miles-theme');
+          theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.headerInk = Math.random() < 0.5 ? 'red' : 'green';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#141413' : '#f3f2ee');
+      })();
+    </script>
     <meta property="og:title" content="Miles Waite — Distinguished Frontier Engineer" />
     <meta
       property="og:description"

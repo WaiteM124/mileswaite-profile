@@ -43,9 +43,13 @@ Engineering context sits between the hero and Selected Work. It is three short p
 
 The flagship summary stays as it is. Its only link is “Read the architecture and design case study”, pointing at `/work/decision-intelligence/`. Do not add a repository, demo, or results link until a real URL exists.
 
-The case study is a static page at `work/decision-intelligence/index.html`. Its public path is `/work/decision-intelligence/` and its canonical URL is `https://ai.mileswaite.net/work/decision-intelligence/`. `CASE_STUDY.md` is the source text. When the study changes, update that file and transcribe the same wording into the HTML page. Keep the “Architecture and design study” label, and keep the illustrative recommendation labelled as structure rather than market research or performance results.
+The case study is a static page at `work/decision-intelligence/index.html`. Its public path is `/work/decision-intelligence/` and its canonical URL is `https://ai.mileswaite.net/work/decision-intelligence/`. `CASE_STUDY.md` is the narrative source. When that narrative changes, update that file and transcribe the same wording into the HTML page. Keep the “Architecture and design study” label, and keep the illustrative recommendation labelled as structure rather than market research or performance results.
 
-Header Work and Contact on the homepage scroll to `#work` and `#contact`. On the case-study page they point to `/#work` and `/#contact`.
+The architecture diagram is `public/images/architecture-authority.png`, served at `/images/architecture-authority.png`. The complete A2A specification is `public/downloads/A2A_CONTRACTS.md`, served at `/downloads/A2A_CONTRACTS.md`. Both are copies of the files in `design-input/`. The page shows that diagram and the three illustrative contracts. Do not redraw the diagram or rewrite the contract JSON.
+
+Header Work and Contact on the homepage scroll to `#work` and `#contact`. On the case-study page they point to `/#work` and `/#contact`. The theme control is fixed at the top-right of the viewport and is not in that row. It shows D in the light theme and L in the dark theme. The choice is saved as `miles-theme`. With no saved choice, the page follows the system colour scheme. Each full page load picks red or green with equal chance for the Work, Contact, and L/D underlines only, and does not save the pick. Light theme uses that colour; dark theme uses `#f3f2ee`. Links in the page body keep the accent underline.
+
+A 3px line on the left edge fills as the page scrolls. It is hidden below 768px. In the light theme it runs from black to red, and in the dark theme from white to green. Reduced motion leaves only the faint track.
 
 The other three projects link to the WaiteM124 repositories in `src/content.ts`. Each of those entries is an explanation followed by an evaluation or architecture context. The header contact GitHub link is the separate profile at `https://github.com/Milesy1`.
 
