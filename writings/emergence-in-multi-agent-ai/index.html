@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?</title>
+    <meta
+      name="description"
+      content="Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it."
+    />
+    <meta name="author" content="Miles Waite" />
+    <meta name="theme-color" content="#f3f2ee" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('miles-theme');
+          theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.headerInk = Math.random() < 0.5 ? 'red' : 'green';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#141413' : '#f3f2ee');
+      })();
+    </script>
+    <link rel="canonical" href="https://ai.mileswaite.net/writings/emergence-in-multi-agent-ai/" />
+    <meta
+      property="og:title"
+      content="Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?"
+    />
+    <meta
+      property="og:description"
+      content="Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://ai.mileswaite.net/writings/emergence-in-multi-agent-ai/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?"
+    />
+    <meta
+      name="twitter:description"
+      content="Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Cpath d='M6 24c5-10 15-10 20 0' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath d='M8 21c4-8 12-8 16 0' fill='none' stroke='%23ff0000' stroke-width='1.5'/%3E%3Cpath d='M10 18c3-6 9-6 12 0' fill='none' stroke='%2300ff00' stroke-width='1.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">D</button>
+    <script>
+      (function () {
+        var button = document.querySelector('[data-theme-toggle]');
+        var dark = document.documentElement.dataset.theme === 'dark';
+        button.textContent = dark ? 'L' : 'D';
+        button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      })();
+    </script>
+    <div class="shell article-shell">
+      <header class="site-header">
+        <p class="brand">Miles Waite</p>
+        <nav class="site-nav" aria-label="Homepage">
+          <a class="link" href="/#work">Work</a>
+          <a class="link" href="/#writings">Writings</a>
+          <a class="link" href="/#contact">Contact</a>
+        </nav>
+      </header>
+      <main>
+        <p class="return">
+          <a class="link" href="/#writings">Back to writings</a>
+        </p>
+        <article class="article">
+          <p class="kicker">Essay</p>
+          <h1>Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?</h1>
+          <p class="dek">
+            <em>Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it.</em>
+          </p>
+          <p class="writing-meta">20 November 2026</p>
+
+          <h2>Introduction</h2>
+          <p>Put several language-model agents in a loop, let them talk, and something happens that none of them was told to do. They settle on shared names. They drift towards one another's answers. In pricing games they find their way to high prices without being asked to collude. This is often presented as a glimpse of collective intelligence: if one model is clever, surely a society of them is cleverer.</p>
+          <p>The question in the title can be answered more precisely than it usually is. Emergence is a real, well-defined phenomenon with fifty years of science behind it, and recent experiments show it clearly in populations of LLM agents. But the emergent behaviours that have actually been measured are conventions, biases, conformity, collusion and correlated error. Those are the properties of a group, not evidence of a mind. Some multi-agent decision-support designs deliberately go the other way. The Decision Intelligence case study discussed below uses contracts whose main job is to stop the group from developing a will of its own. This essay sets out the evidence for that design choice, and where it may be wrong.</p>
+
+          <h2>Central argument</h2>
+          <p>Weak emergence, meaning macro behaviour that follows from local rules but can in practice only be found by running the system, is established in LLM agent populations. The emergent properties documented so far are mostly ones a decision system should fear: agreement that is not evidence, biases no individual agent holds, and errors that are correlated rather than independent. Whether genuine "intelligence" emerges from interaction is an open and speculative question. For systems that support consequential decisions, the defensible engineering stance is to treat emergence as a hazard to bound: keep agents independent where independence is the point, keep disagreement visible, cap the feedback loops, and leave authority outside the group.</p>
+
+          <h2>Technical explanation</h2>
+
+          <h3>What emergence means, precisely</h3>
+          <p>The word is used loosely, so it helps to start with a definition that can be tested. Mark Bedau's 1997 paper on weak emergence gives one. Take a system S whose micro-level dynamics D are local and known. Bedau defines a macrostate P as weakly emergent "iff P can be derived from D and S's external conditions but only by simulation". Nothing mysterious is added. The macro pattern is fully caused by the micro rules, but there is no shortcut: the only way to learn what the system will do is to run it.</p>
+          <p>Strong emergence is the stronger claim that some macro properties are not derivable from the micro level even in principle, and exert their own downward causal power. It is philosophically contested and, for software, beside the point. Every multi-agent LLM system is a program running on a computer. Whatever it does is derivable from its code, weights, prompts and inputs. The interesting question is never whether its behaviour is "really" reducible. It is whether that behaviour can be predicted without running it, and usually it cannot.</p>
+          <p>Philip Anderson made the complementary point in "More is different" (Science, 1972). Reduction runs one way: knowing the fundamental laws does not make it possible to reconstruct the behaviour of large aggregates from them. At each level of complexity new properties appear that need their own concepts. Anderson was writing about physics, but the lesson carries over directly. Understanding a single model's behaviour on a prompt does not tell you what a hundred copies of it will do when they read each other's outputs.</p>
+
+          <h3>Simple rules, complex behaviour</h3>
+          <p>The canonical demonstrations come from agent-based models, and they are worth recalling because they show how little machinery emergence needs.</p>
+          <p>In Thomas Schelling's segregation model (1971), agents on a grid move if too few of their neighbours share their type. Each agent's preference can be mild: no agent wants a segregated neighbourhood, only not to be in a small local minority. Yet the grid reliably sorts itself into strongly segregated regions. The macro outcome is one that no individual chose.</p>
+          <p>Craig Reynolds' boids (1987) produce realistic flocking from three local steering rules: separation (avoid crowding neighbours), alignment (steer towards their average heading) and cohesion (steer towards their average position). There is no leader and no global plan. The flock exists only in the interaction.</p>
+          <p>Robert Axelrod and William Hamilton (Science, 1981) showed through computer tournaments of the iterated prisoner's dilemma that cooperation can emerge and persist among self-interested agents. Simple reciprocal strategies such as tit-for-tat did well, and cooperation could then resist invasion. Again the population-level property, stable cooperation, is not written into any agent.</p>
+          <p>John Holland and Stuart Kauffman generalised these observations into the study of complex adaptive systems: many interacting agents, each adapting to the others, producing aggregate behaviour that is robust in some ways and brittle in others. The Santa Fe tradition is the right vocabulary here, but it is a lens rather than a theorem. It indicates where to look, not what will be found.</p>
+          <p>Software engineers already live with this, mostly without the vocabulary. The clearest example is the retry storm. Each client follows a locally sensible rule: if a request fails, try again. When a dependency slows down, failures rise, so retries rise, which slows the dependency further. Bronson and colleagues (HotOS 2021) call the resulting class "metastable failures": a system in a vulnerable state is pushed by a trigger into a bad state that a feedback loop then sustains, even after the trigger is gone. No component is faulty. The failure is a property of the interaction. The standard fixes, exponential backoff with jitter, retry budgets and circuit breakers, are not cleverer components. They are constraints on the interaction rules. The same reflex, constraining the interaction rules rather than improving the components, transfers directly to multi-agent AI.</p>
+
+          <h3>What has actually been observed in LLM agent populations</h3>
+          <p>The question then is which emergent phenomena have been shown in systems built from language models, rather than imagined for them.</p>
+          <p><strong>Conventions and collective bias (established, experimental).</strong> Ashery, Aiello and Baronchelli (Science Advances, 2025) ran decentralised populations of LLM agents in a naming game, with agents rewarded for coordinating with a randomly chosen partner. They report that universally adopted conventions emerge spontaneously; that strong collective biases can emerge "even when agents exhibit no bias individually"; and that committed minority groups of adversarial agents can drive the population to an alternative convention. All three findings are emergent in Bedau's sense. The second has the most direct engineering consequence: testing each agent in isolation would not reveal the group's bias.</p>
+          <p><strong>Conformity (established, experimental).</strong> The BenchForm study ("Do as We Do, Not as You Think", arXiv 2501.13381) measures conformity in LLM multi-agent settings under several interaction protocols. It finds conformity effects, and examines how factors such as interaction time and majority size influence them. "Talk Isn't Always Cheap" (arXiv 2509.05396) goes further and finds that debate can reduce accuracy over time, even when stronger models outnumber weaker ones, because models "frequently shift from correct to incorrect answers in response to peer reasoning, favoring agreement over challenging flawed reasoning".</p>
+          <p><strong>Debate adds less than it seems (established, with a theoretical model).</strong> "Debate or Vote" (arXiv 2508.17536) separates multi-agent debate into its two ingredients, majority voting and the exchange of arguments. Across seven NLP benchmarks, it finds that majority voting alone accounts for most of the gains usually attributed to debate. It then models debate as a stochastic process and proves that it induces a martingale over the agents' beliefs: on its own, debate does not improve expected correctness. Earlier benchmarking by Smit and colleagues (arXiv 2311.17371) similarly found that debate protocols did not reliably beat simpler strategies such as self-consistency and ensembling, though tuned variants could do better. The crowd's wisdom here comes mostly from aggregation, which needs no interaction at all.</p>
+          <p><strong>Correlated errors (established, observational).</strong> Independence is what makes aggregation work. Kim, Garg, Peng and Garg (ICML 2025, arXiv 2506.07962) evaluated over 350 LLMs and found substantial correlation in their errors. On one leaderboard dataset, when two models both got a question wrong, they agreed on the same wrong answer 60% of the time. Larger and more accurate models had more correlated errors, even across different architectures and providers. A panel of agents built from similar models is therefore less independent than it looks before they have exchanged a single message. Interaction then pushes the correlation higher.</p>
+          <p><strong>Collusion (established in experiments; the steganographic version is speculative).</strong> Fish, Gonczarowski and Shorrer (arXiv 2404.00806) found that LLM pricing agents in oligopoly settings "quickly and autonomously reach supracompetitive prices and profits", and that small wording changes in their instructions substantially changed how far this went. Nobody told them to collude. Motwani and colleagues (arXiv 2402.07510) formalised secret collusion through steganography. They found current capabilities limited, but saw a capability jump in GPT-4 that they judged worth monitoring. Collusion in pricing is demonstrated; hidden coordination between agents is a credible risk, not yet an observed one.</p>
+          <p><strong>Where multi-agent systems actually fail.</strong> The MAST study (Cemri et al., arXiv 2503.13657) annotated more than 1,600 traces across seven popular multi-agent frameworks and derived a taxonomy of 14 failure modes in three categories: system design issues, inter-agent misalignment and task verification. Inter-annotator agreement was high (kappa 0.88). The authors' framing is direct: the benchmark gains from multi-agent systems are "often minimal", and the failures are structural. The agents do not fail because they are individually weak, but because of how they are organised and checked.</p>
+          <p>Hammond and colleagues' report on multi-agent risks (arXiv 2502.14143) gathers these into three failure modes, miscoordination, conflict and collusion, and seven risk factors, including network effects, selection pressures, destabilising dynamics and emergent agency. It is a taxonomy, not an experiment, but it is anchored in documented real-world examples and experimental evidence.</p>
+
+          <h3>Does intelligence emerge?</h3>
+          <p>This is where the evidence runs out and the label must change to speculative.</p>
+          <p>There are suggestive results. Park and colleagues' generative agents (arXiv 2304.03442) showed believable social behaviour in a simulated town, including information spreading and agents coordinating to attend a party that only one of them was told about. That is a real emergent coordination effect. But it shows believable social dynamics, not problem-solving ability beyond that of the individual agents.</p>
+          <p>It also helps to remember the argument about "emergent abilities" in single models. Wei and colleagues (arXiv 2206.07682) described abilities that appear abruptly with scale. Schaeffer, Miranda and Koyejo (arXiv 2304.15004) showed that many such jumps disappear when nonlinear or discontinuous metrics are replaced by continuous ones. The lesson for multi-agent claims is methodological. A sudden collective "capability" may be partly an artefact of how success is scored, so the measurement deserves as much scrutiny as the system.</p>
+          <p>So the fair summary is this. Collective behaviour is clearly emergent. Collective intelligence, in the sense of a group reliably solving problems its members cannot, has not been shown in LLM agent systems in any robust way. The debate results suggest that much of what looks like it is aggregation. The conformity results suggest that interaction can make a group less accurate than its best member.</p>
+
+          <h3>Designing against the wrong kind of emergence</h3>
+          <p>The Decision Intelligence case study published on ai.mileswaite.net is a design study, not a deployed system, and its documentation makes no performance claims. Its architecture is nevertheless a direct response to the phenomena above, which makes it a useful point of contrast.</p>
+          <p>The case study (CASE_STUDY.md) starts from the observation that if several agents "share the same context, permissions, and perspective, the result is often distributed conversation rather than distributed intelligence". The design separates four domain agents (financial, commercial, operational and risk) that investigate independently, a critical-review agent that challenges their findings, and a strategic agent that synthesises. Its stated goal is explicit: "The design goal is not consensus. It is an auditable recommendation that makes evidence, assumptions, disagreement, and uncertainty visible."</p>
+          <p>The A2A contract specification (A2A_CONTRACTS.md) turns that into rules, each of which constrains one of the emergent dynamics:</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th scope="col">Emergent risk</th>
+                <th scope="col">Contract response (design, not yet tested at scale)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Conformity and premature convergence</th>
+                <td>Domain agents investigate independently; findings are versioned, so a revision is visible rather than silent</td>
+              </tr>
+              <tr>
+                <th scope="row">Runaway feedback loop between reviewer and author</th>
+                <td><code>review_round</code> is capped at three. Exhausting it "must escalate the disagreement to the human owner rather than create an infinite agent loop" (rule 15)</td>
+              </tr>
+              <tr>
+                <th scope="row">Majority pressure erasing dissent</th>
+                <td>An unresolved critical challenge blocks the recommendation (rule 18); "Synthesis must not erase minority positions" (rule 20)</td>
+              </tr>
+              <tr>
+                <th scope="row">Emergent agency or collusion towards action</th>
+                <td>Authority flags such as <code>may_execute</code> are schema constants fixed at <code>false</code>; approval must be a separate, authenticated human record tied to the exact recommendation content (rules 21–24)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The specification states its own limits: "The contract layer is not the control boundary by itself." Schemas make intent visible. Identity, policy enforcement, immutable history and an independent execution gateway make the boundary real.</p>
+          <p>The same principle appears in the AP automation system (the public ap-automation-public repository), which predicts general-ledger codes for accounts-payable invoice lines. It is not a multi-agent debate, but it contains a feedback loop that could easily become a self-reinforcing one. Its README explains that only human-confirmed or human-corrected lines are written back to the retrieval corpus, and that auto-posts are never learned from, "otherwise the corpus would agree with itself and the automation rate would rise without any new information". That is the retry-storm lesson again in another form: a loop that feeds a system its own output can create the appearance of improvement with no new information in it.</p>
+
+          <figure class="diagram-figure">
+            <svg class="emergence-diagram" viewBox="0 0 920 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
+              <title id="diagram-title">Unbounded vs Bounded Multi-Agent Design</title>
+              <desc id="diagram-desc">Left: interaction where agreement is the output and may reflect conformity or correlated error. Right: the case-study design, where domain work is independent, review is bounded, disagreement is carried to the human, and authority sits outside the agents.</desc>
+              <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" class="arrow-head" />
+                </marker>
+                <marker id="arrow-dashed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" class="arrow-head-dashed" />
+                </marker>
+              </defs>
+              <g class="subgraph unbounded">
+                <rect x="10" y="10" width="320" height="320" rx="8" class="subgraph-bg" />
+                <text x="170" y="38" class="subgraph-title">Unbounded interaction</text>
+                <rect x="60" y="80" width="90" height="36" rx="4" class="node" />
+                <text x="105" y="103" class="node-text">Agent A</text>
+                <rect x="190" y="80" width="90" height="36" rx="4" class="node" />
+                <text x="235" y="103" class="node-text">Agent B</text>
+                <rect x="125" y="160" width="90" height="36" rx="4" class="node" />
+                <text x="170" y="183" class="node-text">Agent C</text>
+                <line x1="150" y1="98" x2="190" y2="98" class="edge bidirectional" />
+                <line x1="190" y1="98" x2="150" y2="98" class="edge bidirectional" />
+                <line x1="235" y1="116" x2="195" y2="160" class="edge bidirectional" />
+                <line x1="195" y1="160" x2="235" y2="116" class="edge bidirectional" />
+                <line x1="105" y1="116" x2="145" y2="160" class="edge bidirectional" />
+                <line x1="145" y1="160" x2="105" y2="116" class="edge bidirectional" />
+                <rect x="85" y="250" width="170" height="44" rx="4" class="node consensus" />
+                <text x="170" y="268" class="node-text">Consensus</text>
+                <text x="170" y="285" class="node-text-small">(may be conformity)</text>
+                <line x1="105" y1="116" x2="130" y2="250" class="edge" marker-end="url(#arrow)" />
+              </g>
+              <g class="subgraph bounded">
+                <rect x="360" y="10" width="550" height="320" rx="8" class="subgraph-bg bounded-bg" />
+                <text x="635" y="38" class="subgraph-title">Bounded design (case study)</text>
+                <rect x="385" y="70" width="90" height="36" rx="4" class="node domain" />
+                <text x="430" y="93" class="node-text">Financial</text>
+                <rect x="385" y="120" width="90" height="36" rx="4" class="node domain" />
+                <text x="430" y="143" class="node-text">Commercial</text>
+                <rect x="385" y="170" width="90" height="36" rx="4" class="node domain" />
+                <text x="430" y="193" class="node-text">Operational</text>
+                <rect x="385" y="220" width="90" height="36" rx="4" class="node domain" />
+                <text x="430" y="243" class="node-text">Risk</text>
+                <rect x="540" y="135" width="110" height="44" rx="4" class="node review" />
+                <text x="595" y="153" class="node-text">Critical</text>
+                <text x="595" y="170" class="node-text">review</text>
+                <line x1="475" y1="88" x2="540" y2="150" class="edge cyan" marker-end="url(#arrow)" />
+                <line x1="475" y1="138" x2="540" y2="155" class="edge cyan" marker-end="url(#arrow)" />
+                <line x1="475" y1="188" x2="540" y2="162" class="edge cyan" marker-end="url(#arrow)" />
+                <line x1="475" y1="238" x2="540" y2="168" class="edge cyan" marker-end="url(#arrow)" />
+                <path d="M 540 145 Q 490 60, 450 70" class="edge dashed amber" marker-end="url(#arrow-dashed)" />
+                <text x="455" y="55" class="edge-label amber-text">challenge, max 3 rounds</text>
+                <rect x="710" y="135" width="110" height="44" rx="4" class="node synthesis" />
+                <text x="765" y="153" class="node-text">Strategic</text>
+                <text x="765" y="170" class="node-text">synthesis</text>
+                <line x1="650" y1="157" x2="710" y2="157" class="edge cyan" marker-end="url(#arrow)" />
+                <rect x="610" y="260" width="180" height="50" rx="8" class="node human" />
+                <text x="700" y="282" class="node-text human-text">Human decision</text>
+                <text x="700" y="298" class="node-text-small human-text">(separate record)</text>
+                <line x1="765" y1="179" x2="720" y2="260" class="edge green" marker-end="url(#arrow)" />
+                <path d="M 620 179 Q 600 220, 650 260" class="edge dashed amber" marker-end="url(#arrow-dashed)" />
+                <text x="560" y="230" class="edge-label amber-text">unresolved,</text>
+                <text x="560" y="245" class="edge-label amber-text">kept visible</text>
+              </g>
+            </svg>
+            <figcaption><em>Figure 1.</em> Left: interaction where agreement is the output and may reflect conformity or correlated error. Right: the case-study design, where domain work is independent, review is bounded, disagreement is carried to the human, and authority sits outside the agents. Illustrative; the design has not been tested at scale.</figcaption>
+          </figure>
+
+          <h2>Limitations</h2>
+          <p>The tension here should be stated plainly. By constraining interaction, designs such as the Decision Intelligence case study may discard whatever genuine benefit interaction could bring. The "Debate or Vote" authors show that biasing belief updates towards correction can make debate more effective, so a well-designed protocol could outperform independent voting. That trade-off has not been tested in the case study. The case for constraint rests on risks documented in published experiments, not on measurements of the design itself.</p>
+          <p>Most of the LLM evidence is recent, often preprint, and tied to particular models and tasks. Naming games and pricing games are deliberately simple. Results may not transfer to long-horizon enterprise workflows, and future models may behave differently. In particular, the error-correlation finding concerns models answering independently, so it says nothing directly about any specific agent architecture.</p>
+          <p>Finally, complex adaptive systems theory is used here as a lens. It explains why interaction effects should be expected and hard to predict. It does not predict which specific ones will appear in a given LLM system.</p>
+
+          <h2>Conclusion</h2>
+          <p>Can intelligence arise from interaction? In ant colonies, markets and scientific communities, something like it plausibly does, but those systems took long periods to evolve the institutions that make collective judgement reliable: independence, dissent, aggregation rules and accountability. LLM agent populations already show the raw material of emergence. They form conventions, develop biases no member holds, conform under pressure and find their way to collusion. What they lack is the institutional structure.</p>
+          <p>That suggests a different question for engineers. Not "how can intelligence be made to emerge?", but "what institutions does a group of agents need before its collective output deserves any weight?" The answer embodied in the A2A contract specification is contracts that preserve independence and dissent, bounded loops and human authority. That answer may prove too cautious. But it yields a design whose failures are visible, and that is more than can be said for a group whose consensus looks like the answer.</p>
+
+          <h2>Sources</h2>
+          <p><strong>Complexity science</strong></p>
+          <ul>
+            <li>Bedau, M. A. (1997). Weak Emergence. Philosophical Perspectives 11. <a class="link" href="https://people.reed.edu/~mab/papers/weak.emergence.pdf" target="_blank" rel="noopener noreferrer">https://people.reed.edu/~mab/papers/weak.emergence.pdf</a></li>
+            <li>Anderson, P. W. (1972). More is different. Science 177(4047). <a class="link" href="https://doi.org/10.1126/science.177.4047.393" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/science.177.4047.393</a></li>
+            <li>Schelling, T. C. (1971). Dynamic models of segregation. Journal of Mathematical Sociology 1(2). <a class="link" href="https://doi.org/10.1080/0022250X.1971.9989794" target="_blank" rel="noopener noreferrer">https://doi.org/10.1080/0022250X.1971.9989794</a></li>
+            <li>Reynolds, C. W. (1987). Flocks, Herds, and Schools: A Distributed Behavioral Model. <a class="link" href="https://www.red3d.com/cwr/papers/1987/boids.html" target="_blank" rel="noopener noreferrer">https://www.red3d.com/cwr/papers/1987/boids.html</a></li>
+            <li>Axelrod, R. and Hamilton, W. D. (1981). The Evolution of Cooperation. Science 211(4489). <a class="link" href="https://doi.org/10.1126/science.7466396" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/science.7466396</a></li>
+            <li>Holland, J. H. (1995). Hidden Order: How Adaptation Builds Complexity. Addison-Wesley (book; no free link).</li>
+            <li>Bronson, N. et al. (2021). Metastable Failures in Distributed Systems. HotOS '21. <a class="link" href="https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf" target="_blank" rel="noopener noreferrer">https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf</a></li>
+          </ul>
+          <p><strong>LLM agents and multi-agent systems</strong></p>
+          <ul>
+            <li>Ashery, A. F., Aiello, L. M. and Baronchelli, A. (2025). Emergent social conventions and collective bias in LLM populations. Science Advances. <a class="link" href="https://doi.org/10.1126/sciadv.adu9368" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/sciadv.adu9368</a></li>
+            <li>Do as We Do, Not as You Think: the Conformity of Large Language Models (BenchForm). <a class="link" href="https://arxiv.org/abs/2501.13381" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2501.13381</a></li>
+            <li>Talk Isn't Always Cheap: Understanding Failure Modes in Multi-Agent Debate. <a class="link" href="https://arxiv.org/abs/2509.05396" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2509.05396</a></li>
+            <li>Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models? <a class="link" href="https://arxiv.org/abs/2508.17536" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2508.17536</a></li>
+            <li>Smit, A. et al. (2023). Should we be going MAD? A Look at Multi-Agent Debate Strategies for LLMs. <a class="link" href="https://arxiv.org/abs/2311.17371" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2311.17371</a></li>
+            <li>Kim, E., Garg, A., Peng, K. and Garg, N. (2025). Correlated Errors in Large Language Models. ICML. <a class="link" href="https://arxiv.org/abs/2506.07962" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2506.07962</a></li>
+            <li>Cemri, M. et al. (2025). Why Do Multi-Agent LLM Systems Fail? (MAST). <a class="link" href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2503.13657</a></li>
+            <li>Fish, S., Gonczarowski, Y. A. and Shorrer, R. I. (2024). Algorithmic Collusion by Large Language Models. <a class="link" href="https://arxiv.org/abs/2404.00806" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2404.00806</a></li>
+            <li>Motwani, S. R. et al. (2024). Secret Collusion among AI Agents: Multi-Agent Deception via Steganography. <a class="link" href="https://arxiv.org/abs/2402.07510" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2402.07510</a></li>
+            <li>Hammond, L. et al. (2025). Multi-Agent Risks from Advanced AI. <a class="link" href="https://arxiv.org/abs/2502.14143" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2502.14143</a></li>
+            <li>Park, J. S. et al. (2023). Generative Agents: Interactive Simulacra of Human Behavior. <a class="link" href="https://arxiv.org/abs/2304.03442" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2304.03442</a></li>
+            <li>Wei, J. et al. (2022). Emergent Abilities of Large Language Models. <a class="link" href="https://arxiv.org/abs/2206.07682" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2206.07682</a></li>
+            <li>Schaeffer, R., Miranda, B. and Koyejo, S. (2023). Are Emergent Abilities of Large Language Models a Mirage? <a class="link" href="https://arxiv.org/abs/2304.15004" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2304.15004</a></li>
+          </ul>
+          <p><strong>Project documentation</strong></p>
+          <ul>
+            <li>Multi-agent decision intelligence case study (design study): <a class="link" href="https://ai.mileswaite.net/work/decision-intelligence/" target="_blank" rel="noopener noreferrer">https://ai.mileswaite.net/work/decision-intelligence/</a></li>
+            <li>A2A contracts v1: <a class="link" href="https://ai.mileswaite.net/downloads/A2A_CONTRACTS.md" target="_blank" rel="noopener noreferrer">https://ai.mileswaite.net/downloads/A2A_CONTRACTS.md</a> (live, 200)</li>
+            <li>ap-automation-public README: <a class="link" href="https://github.com/WaiteM124/ap-automation-public" target="_blank" rel="noopener noreferrer">https://github.com/WaiteM124/ap-automation-public</a></li>
+          </ul>
+
+          <p class="closing-link">
+            <a class="link" href="/#writings">Back to writings</a>
+          </p>
+        </article>
+      </main>
+    </div>
+    <script type="module" src="/src/case-study.ts"></script>
+  </body>
+</html>

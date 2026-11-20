@@ -16,6 +16,14 @@ export interface ContactLink {
   href: string;
 }
 
+export interface WritingItem {
+  kicker?: string;
+  title: string;
+  summary: string;
+  date: string;
+  href: string;
+}
+
 export interface ProfileContent {
   name: string;
   role: string;
@@ -24,6 +32,8 @@ export interface ProfileContent {
   engineering: string[];
   workHeading: string;
   work: WorkItem[];
+  writingsHeading: string;
+  writings: WritingItem[];
   contactHeading: string;
   contact: ContactLink[];
 }
@@ -83,6 +93,17 @@ export const profile: ProfileContent = {
         label: 'Reference implementation',
         href: 'https://github.com/WaiteM124/miles-rag',
       },
+    },
+  ],
+  writingsHeading: 'Writings',
+  writings: [
+    {
+      kicker: 'Essay',
+      title: 'Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?',
+      summary:
+        'Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it.',
+      date: '20 November 2026',
+      href: '/writings/emergence-in-multi-agent-ai/',
     },
   ],
   contactHeading: 'Contact',

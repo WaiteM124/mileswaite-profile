@@ -291,6 +291,21 @@ h3 {
   color: var(--muted);
 }
 
+.writing-date {
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.writing-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.writing-title-link:hover {
+  color: var(--accent);
+}
+
 .link {
   display: inline-flex;
   align-items: center;
@@ -591,4 +606,166 @@ html[data-theme='dark'] .theme-toggle {
 
 .article details pre {
   margin-top: 0.35rem;
+}
+
+.writing-meta {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.diagram-figure {
+  margin: 1.5rem 0;
+}
+
+.emergence-diagram {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.emergence-diagram .subgraph-bg {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.emergence-diagram .bounded-bg {
+  stroke: var(--line);
+}
+
+.emergence-diagram .subgraph-title {
+  fill: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+
+.emergence-diagram .node {
+  fill: var(--bg);
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.emergence-diagram .node.domain {
+  stroke: #0891b2;
+}
+
+.emergence-diagram .node.review {
+  stroke: #0891b2;
+}
+
+.emergence-diagram .node.synthesis {
+  stroke: #0891b2;
+}
+
+.emergence-diagram .node.consensus {
+  stroke: var(--muted);
+}
+
+.emergence-diagram .node.human {
+  fill: var(--bg);
+  stroke: #16a34a;
+  stroke-width: 2;
+}
+
+.emergence-diagram .node-text {
+  fill: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.emergence-diagram .node-text.human-text {
+  fill: #16a34a;
+}
+
+.emergence-diagram .node-text-small {
+  fill: var(--muted);
+  font-size: 10px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.emergence-diagram .node-text-small.human-text {
+  fill: #16a34a;
+}
+
+.emergence-diagram .edge {
+  stroke: var(--text);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.emergence-diagram .edge.bidirectional {
+  stroke: var(--muted);
+}
+
+.emergence-diagram .edge.cyan {
+  stroke: #0891b2;
+}
+
+.emergence-diagram .edge.green {
+  stroke: #16a34a;
+}
+
+.emergence-diagram .edge.dashed {
+  stroke-dasharray: 5, 3;
+}
+
+.emergence-diagram .edge.amber {
+  stroke: #d97706;
+}
+
+.emergence-diagram .arrow-head {
+  fill: var(--text);
+}
+
+.emergence-diagram .arrow-head-dashed {
+  fill: #d97706;
+}
+
+.emergence-diagram .edge-label {
+  fill: var(--muted);
+  font-size: 10px;
+}
+
+.emergence-diagram .edge-label.amber-text {
+  fill: #d97706;
+}
+
+[data-theme='dark'] .emergence-diagram .node.domain,
+[data-theme='dark'] .emergence-diagram .node.review,
+[data-theme='dark'] .emergence-diagram .node.synthesis {
+  stroke: #22d3ee;
+}
+
+[data-theme='dark'] .emergence-diagram .edge.cyan {
+  stroke: #22d3ee;
+}
+
+[data-theme='dark'] .emergence-diagram .node.human {
+  stroke: #4ade80;
+}
+
+[data-theme='dark'] .emergence-diagram .node-text.human-text,
+[data-theme='dark'] .emergence-diagram .node-text-small.human-text {
+  fill: #4ade80;
+}
+
+[data-theme='dark'] .emergence-diagram .edge.green {
+  stroke: #4ade80;
+}
+
+[data-theme='dark'] .emergence-diagram .edge.amber {
+  stroke: #fbbf24;
+}
+
+[data-theme='dark'] .emergence-diagram .arrow-head-dashed {
+  fill: #fbbf24;
+}
+
+[data-theme='dark'] .emergence-diagram .edge-label.amber-text {
+  fill: #fbbf24;
 }
