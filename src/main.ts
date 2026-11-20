@@ -116,17 +116,10 @@ function renderWork(item: WorkItem): HTMLElement {
 
 function renderWriting(item: WritingItem): HTMLElement {
   const children: Node[] = [];
-  if (item.kicker) children.push(element('p', 'kicker', [], item.kicker));
-  const titleLink = document.createElement('a');
-  titleLink.href = item.href;
-  titleLink.className = 'writing-title-link';
-  titleLink.textContent = item.title;
-  const h3 = document.createElement('h3');
-  h3.append(titleLink);
-  children.push(h3);
+  children.push(element('h3', undefined, [], item.title));
   children.push(element('p', 'summary', [], item.summary));
-  children.push(element('p', 'writing-date', [], item.date));
-  children.push(textLink(item.href, 'Read article'));
+  children.push(element('p', 'context', [], item.date));
+  children.push(textLink(item.href, 'Read the article'));
   return element('article', 'work-item', children);
 }
 

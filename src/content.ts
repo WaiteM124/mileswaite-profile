@@ -98,7 +98,6 @@ export const profile: ProfileContent = {
   writingsHeading: 'Writings',
   writings: [
     {
-      kicker: 'Essay',
       title: 'Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?',
       summary:
         'Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it.',
