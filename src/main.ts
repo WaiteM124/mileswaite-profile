@@ -1,5 +1,5 @@
 import './style.css';
-import { profile, type ContactLink, type WorkItem } from './content';
+import { profile, type ContactLink, type WorkItem, type WritingItem } from './content';
 import { mountHero } from './hero';
 import { mountScrollProgress } from './scroll-progress';
 import { createThemeToggle } from './theme';
@@ -30,7 +30,7 @@ function renderPage(): HTMLElement {
     element(
       'nav',
       'site-nav',
-      [textLink('#work', 'Work'), textLink('#contact', 'Contact')],
+      [textLink('#work', 'Work'), textLink('#writings', 'Writings'), textLink('#contact', 'Contact')],
       undefined,
       { 'aria-label': 'On this page' },
     ),
@@ -76,6 +76,17 @@ function renderPage(): HTMLElement {
     { id: 'work', 'aria-labelledby': 'work-heading' },
   );
 
+  const writings = element(
+    'section',
+    'section',
+    [
+      element('h2', undefined, [], profile.writingsHeading, { id: 'writings-heading' }),
+      element('div', 'work-list', profile.writings.map(renderWriting)),
+    ],
+    undefined,
+    { id: 'writings', 'aria-labelledby': 'writings-heading' },
+  );
+
   const contact = element(
     'section',
     'section',
@@ -89,7 +100,7 @@ function renderPage(): HTMLElement {
 
   return element('div', 'shell', [
     header,
-    element('main', undefined, [hero, engineering, work, contact]),
+    element('main', undefined, [hero, engineering, work, writings, contact]),
   ]);
 }
 
@@ -100,6 +111,22 @@ function renderWork(item: WorkItem): HTMLElement {
   children.push(element('p', 'summary', [], item.summary));
   if (item.context) children.push(element('p', 'context', [], item.context));
   if (item.link) children.push(textLink(item.link.href, item.link.label));
+  return element('article', 'work-item', children);
+}
+
+function renderWriting(item: WritingItem): HTMLElement {
+  const children: Node[] = [];
+  if (item.kicker) children.push(element('p', 'kicker', [], item.kicker));
+  const titleLink = document.createElement('a');
+  titleLink.href = item.href;
+  titleLink.className = 'writing-title-link';
+  titleLink.textContent = item.title;
+  const h3 = document.createElement('h3');
+  h3.append(titleLink);
+  children.push(h3);
+  children.push(element('p', 'summary', [], item.summary));
+  children.push(element('p', 'writing-date', [], item.date));
+  children.push(textLink(item.href, 'Read article'));
   return element('article', 'work-item', children);
 }
 
