@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Antifragile Software: Designing Systems That Improve Through Failure</title>
+    <meta
+      name="description"
+      content="Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place."
+    />
+    <meta name="author" content="Miles Waite" />
+    <meta name="theme-color" content="#f3f2ee" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('miles-theme');
+          theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.headerInk = Math.random() < 0.5 ? 'red' : 'green';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#141413' : '#f3f2ee');
+      })();
+    </script>
+    <link rel="canonical" href="https://ai.mileswaite.net/writings/antifragile-software/" />
+    <meta
+      property="og:title"
+      content="Antifragile Software: Designing Systems That Improve Through Failure"
+    />
+    <meta
+      property="og:description"
+      content="Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://ai.mileswaite.net/writings/antifragile-software/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Antifragile Software: Designing Systems That Improve Through Failure"
+    />
+    <meta
+      name="twitter:description"
+      content="Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Cpath d='M6 24c5-10 15-10 20 0' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath d='M8 21c4-8 12-8 16 0' fill='none' stroke='%23ff0000' stroke-width='1.5'/%3E%3Cpath d='M10 18c3-6 9-6 12 0' fill='none' stroke='%2300ff00' stroke-width='1.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">D</button>
+    <script>
+      (function () {
+        var button = document.querySelector('[data-theme-toggle]');
+        var dark = document.documentElement.dataset.theme === 'dark';
+        button.textContent = dark ? 'L' : 'D';
+        button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      })();
+    </script>
+    <div class="shell article-shell">
+      <header class="site-header">
+        <p class="brand">Miles Waite</p>
+        <nav class="site-nav" aria-label="Homepage">
+          <a class="link" href="/#work">Work</a>
+          <a class="link" href="/#writings">Writings</a>
+          <a class="link" href="/#contact">Contact</a>
+        </nav>
+      </header>
+      <main>
+        <p class="return">
+          <a class="link" href="/#writings">Back to writings</a>
+        </p>
+        <article class="article">
+          <h1>Antifragile Software: Designing Systems That Improve Through Failure</h1>
+          <p class="dek">
+            <em>Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place.</em>
+          </p>
+          <p class="writing-meta">20 November 2026</p>
+
+          <blockquote>
+            <p>Evidence status: The maths is established, and the chaos-engineering and postmortem practices are documented. The application to software is an argued position, not a consensus view. Examples from the AP automation system and the Aegis Global Intelligence platform are taken from public READMEs and site copy. Planned capabilities are labelled as planned. The numerical example is illustrative.</p>
+          </blockquote>
+
+          <h2>Introduction</h2>
+          <p>"Antifragile" has become a respectable word in software architecture talks. Services that restart themselves, clusters that reschedule pods and platforms that survive the loss of a data centre are all described as antifragile. Usually what is meant is that the system did not fall over.</p>
+          <p>That is not what Nassim Taleb meant, and the difference matters. Taleb defined antifragility as the property of gaining from volatility, and with Raphael Douady he gave it a mathematical form. Measured against that definition, nearly all software that is called antifragile is robust (it resists stress) or resilient (it recovers from stress). Neither is a weakness; they are hard-won properties. But they are not the thing named, and using the stronger word hides where the real improvement comes from.</p>
+
+          <h2>Central argument</h2>
+          <p>A system is antifragile when its response to variability is convex, so that, by Jensen's inequality, more disorder raises its expected outcome. Running code almost never has that property: a service that survives a failure is usually the same service afterwards. What can be convex is the loop around the code, in which a failure, real or injected, produces evidence that people turn into a new test, a tighter control or a better recovery path. In software, antifragility is a property of the socio-technical system, not of the binary. And that loop only gains from disorder if it learns from verified evidence. A loop that learns from its own outputs can turn convex into concave without anyone noticing.</p>
+
+          <h2>Technical explanation</h2>
+
+          <h3>Fragility as curvature</h3>
+          <p>Start with a payoff f that depends on some variable x: load, latency, an input distribution. Suppose x fluctuates around a mean. Jensen's inequality says that for a convex function, the average of the function is at least the function of the average:</p>
+          <pre><code>E[f(X)] ≥ f(E[X]) when f is convex, with the inequality reversed when f is concave.</code></pre>
+          <p>If the payoff is convex in x, variability helps on average: the extra gain from favourable deviations outweighs the extra loss from unfavourable ones. If it is concave, variability hurts, and it hurts more the larger the deviations. Taleb's insight is that this curvature, not the size of any single forecast, is what decides how something fares under uncertainty. Fragility is concavity to stressors. Antifragility is convexity.</p>
+          <p>Taleb and Douady (arXiv 1208.1189) make this precise. They define fragility and antifragility as negative or positive sensitivity of a tail measure to a semi-measure of dispersion, which they describe as a variant of negative or positive "vega". In words: as the left tail of the stressor's distribution gets wider, does the expected shortfall of the outcome get worse (fragile), stay the same (robust) or improve (antifragile)? They also link this sensitivity to nonlinearity, so that detecting fragility becomes a matter of detecting curvature.</p>
+          <p>The practical tool comes from Taleb and IMF colleagues (IMF Working Paper 12/216), who apply it to bank stress tests. Rather than estimating a single stressed outcome, perturb the stress by a small amount Δ in each direction and compare:</p>
+          <pre><code>H = [f(x − Δ) + f(x + Δ)] / 2 − f(x)</code></pre>
+          <p>Here f is the profit or loss at stress level x. If H is about zero, the response is locally linear and the outcome is robust to small mis-specification of the stress. If H is significantly negative, the extra loss from a slightly worse shock exceeds the extra gain from a slightly milder one, so the position is fragile to volatility. The paper's point is that this second-order test holds up better under model error than the first-order point estimate: a model may get the level of loss wrong and still rank fragilities correctly. It needs no probability distribution, only the ability to run the model at three points.</p>
+
+          <h3>An illustrative software example</h3>
+          <p>Queueing gives the cleanest software instance of concavity. In the textbook M/M/1 queue, mean time in the system, measured in units of service time, is 1 / (1 − ρ), where ρ is utilisation. Take the payoff as negative latency, f(ρ) = −1 / (1 − ρ), and a service running at ρ = 0.8 whose load fluctuates by Δ = 0.1:</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th scope="col">Utilisation</th>
+                <th scope="col">Mean time in system (service-time units)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0.7</td>
+                <td>3.33</td>
+              </tr>
+              <tr>
+                <td>0.8</td>
+                <td>5.00</td>
+              </tr>
+              <tr>
+                <td>0.9</td>
+                <td>10.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>Then H = [−3.33 − 10.00] / 2 − (−5.00) ≈ −1.67. The service is fragile to load variability: a swing of ten points in utilisation costs far more on the way up than it saves on the way down. The service does not need to fail for this to matter. Averaging over the fluctuation, it is slower than its average load would suggest. This is illustrative, not a measurement of any real system, but the shape is general, and it is why capacity planners keep headroom instead of running hot "on average".</p>
+          <p>The same curvature shows up in metastable failures (Bronson et al., HotOS 2021). Retries, cache refills and queue build-up make the response to a load spike sharply worse than linear, and a feedback loop can then hold the system in the bad state after the trigger has passed. These are concave responses, and the fixes, such as backoff, load shedding and retry budgets, flatten the curve. They make the system more robust. They do not make it antifragile.</p>
+
+          <h3>Robust, resilient, antifragile</h3>
+          <p>The terms are often run together, so it is worth separating them.</p>
+          <p>C. S. Holling (1973) distinguished an ecosystem's stability, its tendency to return to equilibrium after a disturbance, from its resilience, its ability to absorb change and keep its relationships intact. David Woods (2015) identified four distinct things that "resilience" is used to mean in engineering: rebound from trauma, robustness, graceful extensibility at the boundaries of normal operation, and sustained adaptability over time. Taleb adds a third category beyond robust and resilient: antifragile systems that are improved by the stressor.</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th scope="col">Property</th>
+                <th scope="col">Response to stress</th>
+                <th scope="col">Software example</th>
+                <th scope="col">Where the gain sits</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Robust</th>
+                <td>Absorbs it, unchanged</td>
+                <td>Redundant replicas, input validation, capacity headroom</td>
+                <td>Nowhere; the aim is no loss</td>
+              </tr>
+              <tr>
+                <th scope="row">Resilient</th>
+                <td>Degrades, then recovers</td>
+                <td>Auto-restart, failover, circuit breakers, graceful degradation</td>
+                <td>Recovery time, not capability</td>
+              </tr>
+              <tr>
+                <th scope="row">Antifragile</th>
+                <td>Gains capability from it</td>
+                <td>A failure becomes a new test, control or runbook that prevents a class of failure</td>
+                <td>The engineering loop</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The biological model Taleb often cites is hormesis: a biphasic dose response, in which a low dose of a stressor stimulates while a high dose harms (Calabrese and Baldwin, 2003). Hormesis is informative for software precisely because of its boundary. The benefit occurs only below a threshold, and only because the organism has a repair and adaptation mechanism that the stressor sets off. Remove the mechanism and the stressor is simply damage.</p>
+
+          <h3>Chaos engineering: a hormetic practice</h3>
+          <p>Netflix's 2011 post introducing the Simian Army is clear about what Chaos Monkey was for. The tool "randomly disables our production instances to make sure we can survive this common type of failure", and it is run "in the middle of a business day, in a carefully monitored environment with engineers standing by", so that the team can "learn the lessons about the weaknesses of our system, and build automatic recovery mechanisms to deal with them". In that description, the system is not getting stronger by itself. Engineers are using small, controlled stressors to find weaknesses and fix them.</p>
+          <p>Basiri and colleagues (IEEE Software 2016, arXiv 1702.05843) and the Principles of Chaos Engineering formalise the practice: define a measurable steady state, hypothesise that it will hold, inject real-world events, run in production, automate, and minimise the blast radius. Every element is a hormesis condition. The dose is kept small (blast radius), the response is measured (steady state), and the repair mechanism is the team that acts on what the experiment reveals. Google's SRE guidance on blameless postmortems does the same work for unplanned failures: it turns an incident into written causes and tracked actions without the defensiveness that would stop people reporting.</p>
+          <p>So chaos engineering is best described as hormesis applied to an organisation. It produces antifragility at the level of the team-plus-system: after each experiment that finds a weakness, the next version is better than it would otherwise have been. The running service, on any given day, is merely more robust.</p>
+
+          <h3>The strongest counter-argument</h3>
+          <p>Martin Monperrus (arXiv 1404.3056) argues that some software can itself be antifragile. He concludes that traditional dependability techniques mostly are not, but that adaptive fault tolerance is, because "the system learns something when an error happens", and that automatic runtime bug fixing and fault injection in production also count. He also suggests that antifragile development processes are better at producing antifragile systems.</p>
+          <p>On inspection, his examples support the socio-technical reading rather than refute it. Automatic repair is a feedback loop built by engineers, operating within limits engineers set, and whether it improves the system depends on whether its fixes are validated. That leads to the most important condition.</p>
+
+          <h3>The loop must learn from evidence, not from itself</h3>
+          <p>A loop that feeds a system's outputs back as training data can look like improvement while it is in fact decay. Shumailov and colleagues (Nature, 2024) show that models trained recursively on generated data suffer "model collapse": the tails of the original distribution vanish, and the defects compound over generations. Perdomo and colleagues' work on performative prediction (arXiv 2002.06673) describes a related problem: when predictions drive the decisions that generate future data, the model is partly predicting itself. Their equilibrium, performative stability, is calibrated "against the future outcomes that manifest from acting on the prediction" rather than against independent evidence.</p>
+          <p>In Taleb's terms, these loops are concave. They respond to their own variability by losing information, and they are most dangerous when they report steady improvement.</p>
+          <p>The AP automation system (the public ap-automation-public repository), which predicts general-ledger codes for accounts-payable invoice lines, is built around this concern. Its README states that it "learns only from what humans confirm". Only human-confirmed or human-corrected lines are written back to the retrieval corpus, and auto-posts are never learned from, because "otherwise the corpus would agree with itself and the automation rate would rise without any new information". An optional LLM gate can only make decisions stricter, never looser, and errors route to human review: the system fails closed. None of this makes the software antifragile. What it does is protect the conditions under which the surrounding loop can be: every correction a human makes is new information that improves future coding, and nothing the system does unaided is mistaken for that information.</p>
+
+          <figure class="diagram-figure">
+            <svg class="antifragile-diagram" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="antifragile-diagram-title antifragile-diagram-desc">
+              <title id="antifragile-diagram-title">Antifragile Loop in Software</title>
+              <desc id="antifragile-diagram-desc">Where antifragility can live in software. The convex step is the human-verified conversion of stress into an engineering change. The dotted edge marks the loop that must not exist: feeding the system's own outputs back as evidence.</desc>
+              <defs>
+                <marker id="af-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" class="af-arrow-head" />
+                </marker>
+                <marker id="af-arrow-excluded" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" class="af-arrow-head-excluded" />
+                </marker>
+              </defs>
+              <rect x="10" y="10" width="580" height="380" rx="8" class="af-bg" />
+              <rect x="40" y="40" width="200" height="50" rx="6" class="af-node" />
+              <text x="140" y="62" class="af-node-text">Stress: incident, injected</text>
+              <text x="140" y="78" class="af-node-text">fault, drift, human correction</text>
+              <rect x="330" y="40" width="200" height="50" rx="6" class="af-node" />
+              <text x="430" y="62" class="af-node-text">Evidence: traces,</text>
+              <text x="430" y="78" class="af-node-text">postmortem, confirmed label</text>
+              <line x1="240" y1="65" x2="330" y2="65" class="af-edge" marker-end="url(#af-arrow)" />
+              <polygon points="300,145 240,185 360,185" class="af-decision" />
+              <text x="300" y="165" class="af-node-text">Verified by human</text>
+              <text x="300" y="180" class="af-node-text">or independent check?</text>
+              <line x1="430" y1="90" x2="430" y2="120" class="af-edge" />
+              <line x1="430" y1="120" x2="300" y2="145" class="af-edge" marker-end="url(#af-arrow)" />
+              <rect x="40" y="230" width="200" height="50" rx="6" class="af-node af-node-yes" />
+              <text x="140" y="252" class="af-node-text af-text-yes">Engineering change:</text>
+              <text x="140" y="268" class="af-node-text af-text-yes">new test, tighter control</text>
+              <line x1="260" y1="185" x2="180" y2="230" class="af-edge af-edge-yes" marker-end="url(#af-arrow)" />
+              <text x="195" y="210" class="af-label af-label-yes">yes</text>
+              <rect x="360" y="230" width="200" height="50" rx="6" class="af-node" />
+              <text x="460" y="252" class="af-node-text">Not learned from:</text>
+              <text x="460" y="268" class="af-node-text">logged, routed to review</text>
+              <line x1="340" y1="185" x2="420" y2="230" class="af-edge" marker-end="url(#af-arrow)" />
+              <text x="395" y="210" class="af-label">no</text>
+              <rect x="40" y="320" width="200" height="50" rx="6" class="af-node af-node-yes" />
+              <text x="140" y="342" class="af-node-text af-text-yes">Next release is more</text>
+              <text x="140" y="358" class="af-node-text af-text-yes">robust to this class of stress</text>
+              <line x1="140" y1="280" x2="140" y2="320" class="af-edge af-edge-yes" marker-end="url(#af-arrow)" />
+              <path d="M 40 345 Q 20 200, 40 65" class="af-edge af-edge-yes" marker-end="url(#af-arrow)" />
+              <rect x="360" y="320" width="200" height="50" rx="6" class="af-node af-node-excluded" />
+              <text x="460" y="348" class="af-node-text af-text-excluded">System's own outputs</text>
+              <path d="M 460 320 Q 500 220, 530 90" class="af-edge-excluded" marker-end="url(#af-arrow-excluded)" />
+              <text x="510" y="180" class="af-label af-label-excluded">excluded</text>
+            </svg>
+            <figcaption><em>Figure 1.</em> Where antifragility can live in software. The convex step is the human-verified conversion of stress into an engineering change. The dotted edge marks the loop that must not exist: feeding the system's own outputs back as evidence. Illustrative.</figcaption>
+          </figure>
+
+          <h3>Measuring it, eventually</h3>
+          <p>If antifragility is convexity, it should be measurable. One could track, for each class of failure, whether the cost of the next occurrence falls after each incident, or apply the H heuristic to a stress test of a service under perturbed load. The Aegis Global Intelligence platform lists fragility, convexity and antifragility assessment as intended future work. Its README states that these "remain areas for implementation and empirical validation"; they are not implemented. The current position is that such measurement is possible in principle and largely absent in practice, Aegis included.</p>
+
+          <h2>Limitations</h2>
+          <p>Taleb's framework is about exposures with probability distributions, and the second-order heuristic assumes, among other conditions, that loss distributions are unimodal and that model bias does not change sign. Software incidents are rare, varied and not obviously drawn from a stable distribution, so the formal tools transfer as a way of thinking more than as a calculation.</p>
+          <p>The argument that antifragility needs human engineering is a definitional choice about where to draw the system boundary. Drawing it around the code makes almost nothing antifragile; drawing it around the organisation makes many things so. The wider boundary is adopted here because it is where improvement through stress is actually documented, in postmortem actions and in fixes prompted by chaos experiments. It remains a position, not a theorem.</p>
+          <p>The queueing example is illustrative. Real services have non-Markovian arrivals, autoscaling and shedding, which change the curve but not usually its sign. Finally, none of the examples drawn from the AP automation system or Aegis is a measured case of a system improving through failure. They are designs intended to keep that possibility honest.</p>
+
+          <h2>Conclusion</h2>
+          <p>The question to ask of any system described as antifragile is simple: after it is stressed, what is better, and who made it better? For almost all software the honest answer is that the code is unchanged, and an engineer who read the evidence made the next version stronger. That answer does not deflate the concept. It places antifragility where it can be designed for: in the size of the doses (small, controlled failures), in the quality of the evidence (verified, not self-generated) and in the speed with which evidence becomes a test, a control or a recovery path.</p>
+          <p>That leaves a harder question for systems that learn. When a model updates itself from its own operation, is it gaining from disorder or quietly consuming the information it needs? Jensen's inequality is indifferent to which way the curve bends. The engineering of learning systems cannot afford to be.</p>
+
+          <h2>Sources</h2>
+          <p><strong>Antifragility and its maths</strong></p>
+          <ul>
+            <li>Taleb, N. N. and Douady, R. (2013). Mathematical definition, mapping, and detection of (anti)fragility. Quantitative Finance. <a class="link" href="https://arxiv.org/abs/1208.1189" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1208.1189</a></li>
+            <li>Taleb, N. N., Canetti, E., Kinda, T., Loukoianova, E. and Schmieder, C. (2012). A New Heuristic Measure of Fragility and Tail Risks: Application to Stress Testing. IMF WP/12/216. <a class="link" href="https://www.imf.org/external/pubs/ft/wp/2012/wp12216.pdf" target="_blank" rel="noopener noreferrer">https://www.imf.org/external/pubs/ft/wp/2012/wp12216.pdf</a></li>
+            <li>Taleb, N. N. (2012). Antifragile: Things That Gain from Disorder. Random House / Penguin (book; no free link).</li>
+            <li>Calabrese, E. J. and Baldwin, L. A. (2003). Hormesis: the dose-response revolution. Annual Review of Pharmacology and Toxicology 43. <a class="link" href="https://doi.org/10.1146/annurev.pharmtox.43.100901.140223" target="_blank" rel="noopener noreferrer">https://doi.org/10.1146/annurev.pharmtox.43.100901.140223</a></li>
+          </ul>
+          <p><strong>Resilience</strong></p>
+          <ul>
+            <li>Holling, C. S. (1973). Resilience and Stability of Ecological Systems. Annual Review of Ecology and Systematics 4. <a class="link" href="https://doi.org/10.1146/annurev.es.04.110173.000245" target="_blank" rel="noopener noreferrer">https://doi.org/10.1146/annurev.es.04.110173.000245</a></li>
+            <li>Woods, D. D. (2015). Four concepts for resilience and the implications for the future of resilience engineering. Reliability Engineering and System Safety 141. <a class="link" href="https://doi.org/10.1016/j.ress.2015.03.018" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.ress.2015.03.018</a></li>
+            <li>Bronson, N. et al. (2021). Metastable Failures in Distributed Systems. HotOS '21. <a class="link" href="https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf" target="_blank" rel="noopener noreferrer">https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf</a></li>
+          </ul>
+          <p><strong>Chaos engineering and learning from failure</strong></p>
+          <ul>
+            <li>Izrailevsky, Y. and Tseitlin, A. (2011). The Netflix Simian Army. <a class="link" href="https://netflixtechblog.com/the-netflix-simian-army-16e57fbab116" target="_blank" rel="noopener noreferrer">https://netflixtechblog.com/the-netflix-simian-army-16e57fbab116</a></li>
+            <li>Basiri, A. et al. (2016). Chaos Engineering. IEEE Software. <a class="link" href="https://arxiv.org/abs/1702.05843" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1702.05843</a></li>
+            <li>Principles of Chaos Engineering. <a class="link" href="https://principlesofchaos.org/" target="_blank" rel="noopener noreferrer">https://principlesofchaos.org/</a></li>
+            <li>Monperrus, M. (2014). Principles of Antifragile Software. <a class="link" href="https://arxiv.org/abs/1404.3056" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1404.3056</a></li>
+            <li>Google SRE Book: Postmortem Culture: Learning from Failure. <a class="link" href="https://sre.google/sre-book/postmortem-culture/" target="_blank" rel="noopener noreferrer">https://sre.google/sre-book/postmortem-culture/</a></li>
+          </ul>
+          <p><strong>Feedback loops in learning systems</strong></p>
+          <ul>
+            <li>Shumailov, I. et al. (2024). AI models collapse when trained on recursively generated data. Nature 631. <a class="link" href="https://doi.org/10.1038/s41586-024-07566-y" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/s41586-024-07566-y</a></li>
+            <li>Perdomo, J. C. et al. (2020). Performative Prediction. ICML. <a class="link" href="https://arxiv.org/abs/2002.06673" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2002.06673</a></li>
+          </ul>
+          <p><strong>Project documentation</strong></p>
+          <ul>
+            <li>Site copy on robustness and antifragility: src/content.ts (<a class="link" href="https://ai.mileswaite.net/" target="_blank" rel="noopener noreferrer">https://ai.mileswaite.net/</a>)</li>
+            <li>ap-automation-public README: <a class="link" href="https://github.com/WaiteM124/ap-automation-public" target="_blank" rel="noopener noreferrer">https://github.com/WaiteM124/ap-automation-public</a></li>
+            <li>Aegis Global Intelligence README (planned fragility measures): <a class="link" href="https://github.com/WaiteM124/aegis-global-intelligence" target="_blank" rel="noopener noreferrer">https://github.com/WaiteM124/aegis-global-intelligence</a></li>
+          </ul>
+
+          <p class="closing-link">
+            <a class="link" href="/#writings">Back to writings</a>
+          </p>
+        </article>
+      </main>
+    </div>
+    <script type="module" src="/src/case-study.ts"></script>
+  </body>
+</html>

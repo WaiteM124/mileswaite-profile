@@ -98,6 +98,13 @@ export const profile: ProfileContent = {
   writingsHeading: 'Writings',
   writings: [
     {
+      title: 'Antifragile Software: Designing Systems That Improve Through Failure',
+      summary:
+        "Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place.",
+      date: '20 November 2026',
+      href: '/writings/antifragile-software/',
+    },
+    {
       title: 'Emergence in Multi-Agent AI: Can Intelligence Arise from Interaction?',
       summary:
         'Interaction between language-model agents really does produce collective behaviour that no single agent was given. That is the reason decision systems should constrain it, not the reason to trust it.',

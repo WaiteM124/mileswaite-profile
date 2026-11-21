@@ -755,3 +755,109 @@ html[data-theme='dark'] .theme-toggle {
 [data-theme='dark'] .emergence-diagram .edge-label.amber-text {
   fill: #fbbf24;
 }
+
+.antifragile-diagram {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.antifragile-diagram .af-bg {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.antifragile-diagram .af-node {
+  fill: var(--bg);
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.antifragile-diagram .af-node-yes {
+  stroke: #16a34a;
+}
+
+.antifragile-diagram .af-node-excluded {
+  stroke: var(--muted);
+  stroke-dasharray: 5, 3;
+}
+
+.antifragile-diagram .af-decision {
+  fill: var(--bg);
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.antifragile-diagram .af-node-text {
+  fill: var(--text);
+  font-size: 11px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.antifragile-diagram .af-text-yes {
+  fill: #16a34a;
+}
+
+.antifragile-diagram .af-text-excluded {
+  fill: var(--muted);
+}
+
+.antifragile-diagram .af-edge {
+  stroke: var(--text);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.antifragile-diagram .af-edge-yes {
+  stroke: #16a34a;
+}
+
+.antifragile-diagram .af-edge-excluded {
+  stroke: var(--muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 5, 3;
+  fill: none;
+}
+
+.antifragile-diagram .af-arrow-head {
+  fill: var(--text);
+}
+
+.antifragile-diagram .af-arrow-head-excluded {
+  fill: var(--muted);
+}
+
+.antifragile-diagram .af-label {
+  fill: var(--muted);
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.antifragile-diagram .af-label-yes {
+  fill: #16a34a;
+}
+
+.antifragile-diagram .af-label-excluded {
+  fill: var(--muted);
+  font-style: italic;
+}
+
+[data-theme='dark'] .antifragile-diagram .af-node-yes {
+  stroke: #4ade80;
+}
+
+[data-theme='dark'] .antifragile-diagram .af-text-yes {
+  fill: #4ade80;
+}
+
+[data-theme='dark'] .antifragile-diagram .af-edge-yes {
+  stroke: #4ade80;
+}
+
+[data-theme='dark'] .antifragile-diagram .af-label-yes {
+  fill: #4ade80;
+}
