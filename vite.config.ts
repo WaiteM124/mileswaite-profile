@@ -13,6 +13,7 @@ export default defineConfig({
         main: resolve(root, 'index.html'),
         decisionIntelligence: resolve(root, 'work/decision-intelligence/index.html'),
         emergenceInMultiAgentAi: resolve(root, 'writings/emergence-in-multi-agent-ai/index.html'),
+        antifragileSoftware: resolve(root, 'writings/antifragile-software/index.html'),
       },
     },
   },
