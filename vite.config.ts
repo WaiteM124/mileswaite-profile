@@ -14,6 +14,7 @@ export default defineConfig({
         decisionIntelligence: resolve(root, 'work/decision-intelligence/index.html'),
         emergenceInMultiAgentAi: resolve(root, 'writings/emergence-in-multi-agent-ai/index.html'),
         antifragileSoftware: resolve(root, 'writings/antifragile-software/index.html'),
+        ragPlatform: resolve(root, 'writings/rag-platform/index.html'),
       },
     },
   },
