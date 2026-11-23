@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG Platform: Retrieval Under Production Constraints</title>
+    <meta
+      name="description"
+      content="A public, multi-collection RAG platform built to show what changes when retrieval-augmented generation has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations."
+    />
+    <meta name="author" content="Miles Waite" />
+    <meta name="theme-color" content="#f3f2ee" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('miles-theme');
+          theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.headerInk = Math.random() < 0.5 ? 'red' : 'green';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#141413' : '#f3f2ee');
+      })();
+    </script>
+    <link rel="canonical" href="https://ai.mileswaite.net/writings/rag-platform/" />
+    <meta
+      property="og:title"
+      content="RAG Platform: Retrieval Under Production Constraints"
+    />
+    <meta
+      property="og:description"
+      content="A public, multi-collection RAG platform built to show what changes when retrieval-augmented generation has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://ai.mileswaite.net/writings/rag-platform/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="RAG Platform: Retrieval Under Production Constraints"
+    />
+    <meta
+      name="twitter:description"
+      content="A public, multi-collection RAG platform built to show what changes when retrieval-augmented generation has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Cpath d='M6 24c5-10 15-10 20 0' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath d='M8 21c4-8 12-8 16 0' fill='none' stroke='%23ff0000' stroke-width='1.5'/%3E%3Cpath d='M10 18c3-6 9-6 12 0' fill='none' stroke='%2300ff00' stroke-width='1.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">D</button>
+    <script>
+      (function () {
+        var button = document.querySelector('[data-theme-toggle]');
+        var dark = document.documentElement.dataset.theme === 'dark';
+        button.textContent = dark ? 'L' : 'D';
+        button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      })();
+    </script>
+    <div class="shell article-shell">
+      <header class="site-header">
+        <p class="brand">Miles Waite</p>
+        <nav class="site-nav" aria-label="Homepage">
+          <a class="link" href="/#work">Work</a>
+          <a class="link" href="/#writings">Writings</a>
+          <a class="link" href="/#contact">Contact</a>
+        </nav>
+      </header>
+      <main>
+        <p class="return">
+          <a class="link" href="/#writings">Back to writings</a>
+        </p>
+        <article class="article">
+          <h1>RAG Platform: Retrieval Under Production Constraints</h1>
+          <p class="dek">
+            <em>A public, multi-collection RAG platform built to show what changes when retrieval-augmented generation has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations.</em>
+          </p>
+          <p class="writing-meta">23 November 2026</p>
+
+          <p>A new system is being built alongside the essays on this site: a public, multi-collection retrieval-augmented generation (RAG) platform, deployed at rag.mileswaite.net. Its purpose is narrow and deliberate. Most RAG systems in public view are demos, a vector store, a prompt and a chat box. This one is built to show what changes when the same idea has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations.</p>
+
+          <p>The architecture runs on AWS in eu-west-2. Documents are embedded with Amazon Titan v2 through Bedrock and stored in Postgres with pgvector on RDS, so retrieval sits in the same transactional database as the metadata that governs it. A FastAPI backend streams answers to a React and TypeScript front end, and the services run on ECS Fargate on ARM64 behind a load balancer. All infrastructure is defined in Terraform, with separate roles for planning and applying changes. Deployments go through GitHub Actions using OIDC, which means short-lived credentials and no stored cloud keys.</p>
+
+          <p>The more interesting engineering is in the controls. Rate limits are applied per IP using the rightmost X-Forwarded-For hop, the one the load balancer appended, because the leftmost value is supplied by the client and can be forged. A hard daily spend cap of £2 bounds the cost of any misuse. The platform also sets strict security headers and a content security policy, scales from one to two tasks, and raises CloudWatch alarms on server errors. Merges are gated in CI on Ragas evaluations run separately for each collection, so a change that degrades retrieval quality on any collection cannot ship.</p>
+
+          <p>Retrieval is also licence-aware. Full text is returned only from sources under the Open Government Licence or CC BY. For everything else the system returns an excerpt and a link to the original. In this design, what a model may reproduce is decided before generation, by metadata, not left to the model.</p>
+
+          <p>The first collection is Complex Systems, followed by UK Tax, covering HMRC and GOV.UK guidance on VAT, Making Tax Digital and IR35. Content ingestion is still pending, so the platform does not yet answer questions.</p>
+
+          <p>Planned next are diagrams and graphs generated from retrieved evidence, so that an answer about a feedback loop or a tax decision path can be shown as a structure, not only described in prose. This is planned work, not yet implemented.</p>
+
+          <p>Building it has already produced lessons, all of them ordinary and instructive:</p>
+
+          <ul>
+            <li>A new AWS account's free-plan limits refused seven-day database backups.</li>
+            <li>An amd64 container image failed on ARM64 Fargate.</li>
+            <li>pgvector rejected a comparison between a vector and a double-precision array.</li>
+            <li>Terraform state kept in CloudShell was wiped and had to be rebuilt by importing 13 resources.</li>
+            <li>Autoscaling failed for lack of a service-linked role.</li>
+            <li>The infrastructure and application pipelines raced each other until they were chained explicitly.</li>
+          </ul>
+
+          <p>None of these is a model problem. That is the point the platform is built to make.</p>
+
+          <p>Evaluation scores and cost figures will be published once they are measured.</p>
+
+          <p>Repository: <a class="link" href="https://github.com/WaiteM124/rag-platform" target="_blank" rel="noopener noreferrer">https://github.com/WaiteM124/rag-platform</a></p>
+
+          <p class="closing-link">
+            <a class="link" href="/#writings">Back to writings</a>
+          </p>
+        </article>
+      </main>
+    </div>
+    <script type="module" src="/src/case-study.ts"></script>
+  </body>
+</html>

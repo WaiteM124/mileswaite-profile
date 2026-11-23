@@ -98,6 +98,13 @@ export const profile: ProfileContent = {
   writingsHeading: 'Writings',
   writings: [
     {
+      title: 'RAG Platform: Retrieval Under Production Constraints',
+      summary:
+        'A public, multi-collection RAG platform built to show what changes when retrieval-augmented generation has to run as a production service, with a budget, an attacker model, a release gate and licensing obligations.',
+      date: '23 November 2026',
+      href: '/writings/rag-platform/',
+    },
+    {
       title: 'Antifragile Software: Designing Systems That Improve Through Failure',
       summary:
         "Taleb's antifragility has a precise mathematical meaning. Almost no software meets it. Engineering organisations can, and that is where the term earns its place.",
