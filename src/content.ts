@@ -69,7 +69,7 @@ export const profile: ProfileContent = {
         'Evaluation context: The system was evaluated on 11,118 real invoice lines from the LA Checkbook dataset. It achieved a 71.5% automation rate at 99.47% accuracy. Automation refers to work routed to automatic posting rather than manual review; the objective is dependable automation with explicit controls, not maximum automation at any cost.',
       link: {
         label: 'Repository',
-        href: 'https://github.com/WaiteM124/ap-automation',
+        href: 'https://github.com/WaiteM124/ap-automation-public',
       },
     },
     {

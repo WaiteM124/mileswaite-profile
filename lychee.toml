@@ -20,6 +20,11 @@ accept = ["200", "206", "429"]
 scheme = ["https", "http"]
 method = "get"
 
+#############################  Extraction  #############################
+
+# Include $id and other absolute URLs inside <pre>/<code> (A2A contract schemas).
+include_verbatim = true
+
 #############################  Exclusions  #############################
 
 exclude_path = [
