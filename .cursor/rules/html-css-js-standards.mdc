@@ -1,0 +1,15 @@
+---
+description: HTML, CSS, and TypeScript standards for the static profile site
+globs: "**/*.{html,css,ts,js}"
+alwaysApply: false
+---
+
+# HTML / CSS / JS standards
+
+Canonical detail: `AGENTS.md`, `README.md`.
+
+- Stack: Vite MPA + TypeScript + `three@0.180.0`. Homepage UI is built in `src/main.ts` from `src/content.ts`. Static pages live under `work/` and `writings/` and must be registered in `vite.config.ts`.
+- **Valid, accessible HTML.** One logical `h1` per page; meaningful link text; theme control accessible name and ≥44×44px hit area; visible `:focus-visible`; hero visuals `aria-hidden` where decorative.
+- **Performance.** Cap device pixel ratio for the hero; pause when off-screen or hidden; honour `prefers-reduced-motion`; dispose WebGL resources on teardown; avoid new runtime dependencies without cause.
+- **Styles.** Keep tokens and layout in `src/style.css`. Do not introduce a CSS framework, icon font, or webfont package.
+- Before finishing: `npm run build`. Prefer CI HTML validation and link checks staying green.

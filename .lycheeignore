@@ -1,0 +1,26 @@
+# URL patterns excluded from lychee (regex, one per line).
+# Prefer excludes over editing site content; list follow-ups below.
+
+# Decorative / non-HTTP
+^data:
+^mailto:
+
+# LinkedIn commonly returns 999 to automated clients
+^https://www\.linkedin\.com/
+
+# Publisher / DOI hosts that block CI user-agents (403) while remaining valid citations
+^https://doi\.org/
+^https://netflixtechblog\.com/
+^https://www\.imf\.org/
+
+# Illustrative A2A schema URLs embedded in the case study; paths are not published yet
+^https://ai\.mileswaite\.net/contracts/
+
+# Homepage work link still points at the private/old path; public mirror is ap-automation-public
+^https://github\.com/WaiteM124/ap-automation$
+
+# Follow-ups (remove an exclude only after the underlying URL is fixed):
+# - Publish or retarget https://ai.mileswaite.net/contracts/*.schema.json
+# - Retarget Selected Work "Self-Learning AP Automation" if ap-automation stays 404
+# - Drop DOI / publisher excludes once those hosts allow CI fetches (or host mirrors)
+# - Optionally resolve root-relative paths (e.g. /images/...) via lychee root-dir/base-url

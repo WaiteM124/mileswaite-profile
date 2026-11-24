@@ -1,0 +1,26 @@
+# Local hooks for contributors. Install with: pre-commit install
+# CI does not require pre-commit; GitHub Actions runs build / HTML / links separately.
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # Do not auto-rewrite site narrative / static page content in this PR stream.
+      - id: trailing-whitespace
+        exclude: ^(design-input/|public/|work/|writings/|CASE_STUDY\.md|REQUIREMENTS\.md)
+      - id: end-of-file-fixer
+        exclude: ^(design-input/|public/|work/|writings/|CASE_STUDY\.md|REQUIREMENTS\.md)
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+        exclude: ^(design-input/|public/|work/|writings/)
