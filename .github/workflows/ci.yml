@@ -1,0 +1,72 @@
+# Lightweight PR checks for the static profile site.
+#
+# Assumptions:
+# - Node 22 matches a current LTS used in CI; local Node 18+ is fine for preview.
+# - html-validate uses .htmlvalidate.json (HTML5-friendly void/doctype rules;
+#   long-title and figure child-order waived for existing case-study markup — follow-ups).
+# - lychee uses lychee.toml + .lycheeignore; excludes cover bot-blocked hosts and
+#   known content URLs that 404 today (follow-ups noted in .lycheeignore / PR).
+# - This workflow does not deploy and does not require repository secrets.
+# - Action versions are SHA-pinned; Dependabot watches github-actions.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck and production build
+        run: npm run build
+
+  html-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+
+      - name: Install html-validate
+        run: npm install --global html-validate@11.21.1
+
+      - name: Validate HTML
+        run: html-validate "index.html" "work/**/*.html" "writings/**/*.html"
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Link check (lychee)
+        uses: lycheeverse/lychee-action@82202e5e9c2f4ef1a55a3d02563e1cb6041e5332 # v2.4.1
+        with:
+          args: >-
+            --config lychee.toml
+            --no-progress
+            'index.html'
+            'work/**/*.html'
+            'writings/**/*.html'
+            'src/content.ts'
+          fail: true

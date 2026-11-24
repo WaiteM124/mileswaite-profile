@@ -1,0 +1,30 @@
+# Broken-link checker for PR CI.
+# Prefer excludes over editing site content when existing pages fail validation.
+# URL excludes live in `.lycheeignore` (one regex per line).
+
+#############################  Display  #############################
+
+verbose = "info"
+no_progress = true
+
+#############################  Runtime  #############################
+
+max_concurrency = 8
+timeout = 20
+max_redirects = 5
+
+#############################  Requests  #############################
+
+user_agent = "Mozilla/5.0 (compatible; mileswaite-profile-ci/1.0; +https://github.com/WaiteM124/mileswaite-profile)"
+accept = ["200", "206", "429"]
+scheme = ["https", "http"]
+method = "get"
+
+#############################  Exclusions  #############################
+
+exclude_path = [
+  "node_modules",
+  "dist",
+  "design-input",
+  "public/downloads",
+]

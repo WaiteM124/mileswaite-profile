@@ -1,0 +1,14 @@
+---
+description: Non-negotiable profile-site principles for every change
+alwaysApply: true
+---
+
+# Profile site — core principles
+
+Canonical detail: `AGENTS.md`.
+
+- **Factual claims only.** Copy must match Miles Waite’s CV and LinkedIn. Do not invent metrics, roles, employers, or URLs.
+- **Intentional GitHub split.** `WaiteM124` work-repo links and the contact GitHub link to `Milesy1` are intentional — do not “fix” or flag them.
+- **Faithful, quiet site.** Keep the Three.js cylinder port; no extra fonts, icon packs, or photos beyond the supplied diagram. Engineering context stays plain text.
+- **Small PRs; no secrets; pin versions.** Green checks before merge. Never weaken CI to pass.
+- Prefer matching existing patterns. State assumptions in the PR. When rules conflict, `AGENTS.md` wins.
