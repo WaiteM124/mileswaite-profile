@@ -4,8 +4,10 @@
 # - Node 22 matches a current LTS used in CI; local Node 18+ is fine for preview.
 # - html-validate uses .htmlvalidate.json (HTML5-friendly void/doctype rules;
 #   long-title and figure child-order waived for existing case-study markup — follow-ups).
-# - lychee uses lychee.toml + .lycheeignore; excludes cover bot-blocked hosts and
-#   known content URLs that 404 today (follow-ups noted in .lycheeignore / PR).
+# - lychee uses lychee.toml + .lycheeignore; excludes cover bot-blocked hosts
+#   (follow-ups noted in .lycheeignore). Contract $id URLs are checked via
+#   include_verbatim against public/contracts (remapped to a local static server
+#   so PR CI does not depend on production having the latest deploy).
 # - This workflow does not deploy and does not require repository secrets.
 # - Action versions are SHA-pinned; Dependabot watches github-actions.
 
@@ -59,12 +61,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Serve public/ for contract schema remap
+        run: python3 -m http.server 8765 --directory public &
+
       - name: Link check (lychee)
         uses: lycheeverse/lychee-action@82202e5e9c2f4ef1a55a3d02563e1cb6041e5332 # v2.4.1
         with:
           args: >-
             --config lychee.toml
             --no-progress
+            --remap 'https://ai.mileswaite.net/contracts http://127.0.0.1:8765/contracts'
             'index.html'
             'work/**/*.html'
             'writings/**/*.html'

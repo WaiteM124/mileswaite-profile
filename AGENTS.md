@@ -20,7 +20,7 @@ Single source of truth for humans and AI agents (including Cursor) working in th
 | `src/case-study.ts` | Shared helpers for static pages |
 | `work/decision-intelligence/` | Flagship architecture case-study page |
 | `writings/` | Static essay / update pages (registered in `vite.config.ts`) |
-| `public/images/` / `public/downloads/` | Served assets (architecture diagram, A2A contracts markdown) |
+| `public/images/` / `public/downloads/` / `public/contracts/` | Served assets (architecture diagram, A2A contracts markdown, JSON Schema `$id` targets) |
 | `design-input/` | Source copies of diagram and contracts; keep in sync with `public/` |
 | `CASE_STUDY.md` | Narrative source for the case-study HTML |
 | `REQUIREMENTS.md` | Living product/requirements spec and acceptance traceability |

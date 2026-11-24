@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.mileswaite.net/contracts/review-challenge/v1.schema.json",
+  "title": "ReviewChallenge",
+  "description": "Proposed critical-review artefact targeting one immutable DomainFinding version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "message_id",
+    "decision_brief_id",
+    "correlation_id",
+    "causation_id",
+    "trace_id",
+    "producer",
+    "created_at",
+    "challenge_id",
+    "target",
+    "challenge_type",
+    "severity",
+    "statement",
+    "evidence_refs",
+    "requested_revision",
+    "review_round",
+    "resolution",
+    "authority"
+  ],
+  "properties": {
+    "contract": {
+      "const": "review-challenge/v1"
+    },
+    "message_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision_brief_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "role",
+        "instance_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "const": "critical_review_agent"
+        },
+        "instance_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "challenge_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "finding_version",
+        "finding_message_id"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "finding_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "finding_message_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "challenge_type": {
+      "enum": [
+        "evidence_gap",
+        "unsupported_inference",
+        "stale_evidence",
+        "permission_violation",
+        "scope_violation",
+        "contradiction",
+        "uncertainty_omission"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^ev-[a-z0-9-]+$"
+      },
+      "uniqueItems": true
+    },
+    "requested_revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "provide_evidence",
+            "narrow_claim",
+            "recompute",
+            "add_uncertainty",
+            "escalate_to_human"
+          ]
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "review_round": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "resolved_by_finding_id"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "open",
+            "resolved",
+            "superseded"
+          ]
+        },
+        "resolved_by_finding_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_commit_capital",
+        "may_approve_expenditure",
+        "may_execute"
+      ],
+      "properties": {
+        "may_commit_capital": {
+          "const": false
+        },
+        "may_approve_expenditure": {
+          "const": false
+        },
+        "may_execute": {
+          "const": false
+        }
+      }
+    }
+  }
+}
